@@ -3,1486 +3,436 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Préparation 23 septembre 2026 — Edgard Opticiens</title>
+<title>Inventaire de caisse — Edgard Opticiens</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#F5F4EF;color:#1a1a18;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:1rem}
-.screen{display:none}
-.screen.active{display:block}
+.wrap{max-width:640px;margin:0 auto;padding:1rem}
 .gold{color:#B8982A}
 .header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:white;border-radius:12px;border:0.5px solid #e5e3da;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 .logo{font-size:17px;font-weight:500;letter-spacing:1px}
 .date-badge{font-size:12px;color:#5F5E5A;background:#F1EFE8;padding:4px 10px;border-radius:20px}
-.btn-back{display:flex;align-items:center;gap:6px;font-size:13px;color:#5F5E5A;cursor:pointer;background:none;border:none;padding:0;margin-bottom:1rem}
-.btn-back:hover{color:#1a1a18}
 .section-title{font-size:18px;font-weight:500;margin-bottom:1rem}
-.prog-row{display:flex;gap:8px;align-items:center;margin-bottom:1.5rem}
-.prog-bar{flex:1;height:8px;background:#E5E3DA;border-radius:6px;overflow:hidden}
-.prog-fill{height:100%;background:#B8982A;border-radius:6px;transition:width 0.5s}
-.prog-lbl{font-size:13px;color:#5F5E5A;min-width:70px;text-align:right}
-.step-tile{display:flex;align-items:center;gap:14px;padding:14px 16px;background:white;border:0.5px solid #e5e3da;border-radius:12px;cursor:pointer;margin-bottom:10px;transition:border-color 0.15s}
-.step-tile:hover{border-color:#aaa}
-.step-tile.done{background:#F5F4EF}
-.tile-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1.5px solid #d3d1c7;color:#5F5E5A}
-.tile-icon.done{background:#EAF3DE;border-color:#3B6D11;color:#3B6D11}
-.tile-icon.active{background:#FAEEDA;border-color:#B8982A;color:#B8982A}
-.tile-info{flex:1}
-.tile-name{font-size:14px;font-weight:500}
-.step-tile.done .tile-name{color:#888780}
-.tile-sub{font-size:12px;color:#888780;margin-top:2px}
-.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap}
-.b-done{background:#EAF3DE;color:#3B6D11}
-.b-active{background:#FAEEDA;color:#633806}
-.b-todo{background:#F1EFE8;color:#5F5E5A}
+.magasin-block{background:white;border:1px solid #B8982A;border-radius:12px;padding:12px 1.25rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:12px}
+.magasin-alert{background:#FCEBEB;border-radius:8px;padding:8px 12px;margin-bottom:1rem;font-size:12px;color:#791F1F;display:flex;align-items:center;gap:8px}
 .card{background:white;border:0.5px solid #e5e3da;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
 .card-title{font-size:12px;font-weight:500;color:#888780;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.tip{background:#FAEEDA;border-radius:8px;padding:10px 12px;font-size:12px;color:#633806;display:flex;gap:8px;line-height:1.6;margin-bottom:1rem}
 .warn{background:#FAECE7;border-radius:8px;padding:10px 12px;font-size:12px;color:#712B13;display:flex;gap:8px;line-height:1.6;margin-bottom:1rem}
-.info{background:#EEF4FF;border-radius:8px;padding:10px 12px;font-size:12px;color:#2D4A8A;display:flex;gap:8px;line-height:1.6;margin-bottom:1rem}
+.money-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.money-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#F5F4EF;border-radius:8px}
+.money-label{font-size:13px;color:#5F5E5A;flex:1}
+.money-val{font-size:13px;font-weight:500;min-width:60px;text-align:right}
+.money-input{width:56px;text-align:right;font-size:13px;padding:4px 6px;border:0.5px solid #d3d1c7;border-radius:8px;background:white}
+.totals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.total-card{background:#F5F4EF;border-radius:8px;padding:10px;text-align:center}
+.total-lbl{font-size:11px;color:#888780;margin-bottom:4px}
+.total-val{font-size:18px;font-weight:500}
+.total-val.ok{color:#3B6D11}
+.total-val.bad{color:#A32D2D}
+.sig-block{border:0.5px solid #d3d1c7;border-radius:8px;padding:12px 14px;margin-bottom:1rem}
+.sig-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sig-row:last-child{margin-bottom:0;align-items:flex-start}
+.sig-label{font-size:13px;color:#888780;min-width:110px;flex-shrink:0}
+.sig-text{font-size:13px}
+.canvas-wrap{border:1.5px dashed #d3d1c7;border-radius:8px;background:#F5F4EF;position:relative;overflow:hidden;margin-bottom:6px}
+canvas{display:block;cursor:crosshair;touch-action:none;width:100%;height:90px}
+.sig-actions{display:flex;justify-content:space-between;align-items:center}
 .btn-primary{width:100%;padding:10px;background:#B8982A;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.15s;margin-bottom:8px}
 .btn-primary:hover{opacity:0.85}
 .btn-primary:disabled{opacity:0.35;cursor:not-allowed}
 .btn-outline{padding:7px 14px;background:none;border:0.5px solid #d3d1c7;border-radius:8px;font-size:13px;cursor:pointer;color:#5F5E5A;display:inline-flex;align-items:center;gap:6px;transition:background 0.15s}
 .btn-outline:hover{background:#F5F4EF}
 .confirm-box{background:#EAF3DE;border-radius:8px;padding:10px 12px;font-size:13px;color:#3B6D11;display:none;align-items:center;gap:10px;margin-top:8px}
-.proc-step{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:0.5px solid #e5e3da}
-.proc-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.proc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.proc-num{width:26px;height:26px;border-radius:50%;background:#FAEEDA;color:#633806;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
-.proc-title{font-size:14px;font-weight:500}
-.proc-text{font-size:13px;color:#5F5E5A;line-height:1.65;margin-bottom:8px}
-.proc-text strong{font-weight:500;color:#1a1a18}
-.proc-img{width:100%;border-radius:8px;border:0.5px solid #e5e3da;display:block;margin-top:8px}
+.error-box{background:#FAECE7;border-radius:8px;padding:10px 12px;font-size:13px;color:#712B13;display:none;align-items:center;gap:10px;margin-top:8px}
 .save-notice{font-size:11px;color:#888780;text-align:center;margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:6px}
-/* Checkbox styled */
-.check-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#F5F4EF;border-radius:8px;margin-bottom:8px;cursor:pointer}
-.check-row input[type=checkbox]{width:16px;height:16px;accent-color:#B8982A;flex-shrink:0;margin-top:2px;cursor:pointer}
-.check-row label{font-size:13px;color:#1a1a18;line-height:1.5;cursor:pointer}
-.check-row.checked{background:#EAF3DE}
-.check-row.checked label{color:#3B6D11}
-/* Tableau rôles */
-.roles-table{width:100%;border-collapse:collapse;font-size:13px}
-.roles-table th{font-size:11px;font-weight:500;color:#888780;text-transform:uppercase;letter-spacing:0.4px;padding:6px 10px;border-bottom:0.5px solid #e5e3da;text-align:left}
-.roles-table td{padding:7px 10px;border-bottom:0.5px solid #f0ede4;vertical-align:middle}
-.roles-table tr:last-child td{border-bottom:none}
-.roles-table input[type=text]{width:100%;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px;font-size:13px;background:white;color:#1a1a18}
-.roles-table input[type=text]:focus{outline:none;border-color:#B8982A}
-.roles-table select{width:100%;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px;font-size:13px;background:white;color:#1a1a18}
-.zone-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:500;background:#FAEEDA;color:#633806}
-/* PDF drop zone */
-.pdf-drop{border:1.5px dashed #d3d1c7;border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:1rem;background:white}
-.pdf-drop:hover{background:#FAEEDA;border-color:#B8982A}
-.pdf-drop.has-file{border-color:#3B6D11;background:#EAF3DE}
-.pdf-viewer{width:100%;height:400px;border:none;border-radius:8px;border:0.5px solid #e5e3da;margin-bottom:1rem;display:none}
-/* Résumé procédure 30/09 */
-.summary-section{border-left:3px solid #B8982A;padding-left:12px;margin-bottom:1rem}
-.summary-section h4{font-size:13px;font-weight:500;color:#1a1a18;margin-bottom:4px}
-.summary-section p{font-size:12px;color:#5F5E5A;line-height:1.6}
-/* Finish */
-.finish-screen{text-align:center;padding:3rem 2rem;position:relative;overflow:hidden}
-canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.form-zone{position:relative}
+.form-zone.locked .lockable{opacity:0.35;pointer-events:none;user-select:none}
+.lock-overlay{display:none;align-items:center;gap:10px;background:white;border:1px dashed #d3d1c7;border-radius:12px;padding:1.25rem;margin-bottom:1rem;font-size:13px;color:#5F5E5A}
+.form-zone.locked .lock-overlay{display:flex}
+.info-note{background:#FAEEDA;border-radius:8px;padding:10px 12px;font-size:12px;color:#633806;line-height:1.6;margin-bottom:1rem;display:flex;gap:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
-<div class="header">
-  <div class="logo"><span class="gold">EDGARD</span> OPTICIENS</div>
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-    <div class="date-badge"><i class="ti ti-calendar-event" style="font-size:11px;margin-right:4px"></i>23 septembre 2026</div>
-    <div class="date-badge" style="background:#FAEEDA;color:#633806">Préparation inventaire</div>
+  <div class="header">
+    <div class="logo"><span class="gold">EDGARD</span> OPTICIENS</div>
+    <span class="date-badge" id="date-badge"></span>
   </div>
-</div>
 
-<!-- ACCUEIL -->
-<div id="s-home" class="screen active">
-  <!-- Sélection magasin -->
-  <div id="magasin-block" style="background:white;border:1px solid #B8982A;border-radius:12px;padding:12px 1.25rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:12px">
+  <div class="magasin-block">
     <i class="ti ti-store" style="font-size:20px;color:#B8982A;flex-shrink:0"></i>
     <div style="flex:1">
       <div style="font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Nom du magasin <span style="color:#A32D2D">*</span></div>
-      <select id="nom-magasin" onchange="saveNomMagasin()" style="width:100%;font-size:15px;font-weight:500;border:none;background:transparent;color:#1a1a18;outline:none;padding:0;cursor:pointer;appearance:auto">
-        <option value="">-- Sélectionnez votre magasin --</option>
-        <option>ANGO</option>
-        <option>BIARRO</option>
-        <option>BORDO</option>
-        <option>CAENPO</option>
-        <option>GIRO</option>
-        <option>HAVRO</option>
-        <option>JISAM-Adulte</option>
-        <option>JISAM-Enfant</option>
-        <option>LYONO</option>
-        <option>MANSO</option>
-        <option>MARSEILLO</option>
-        <option>NANCEO</option>
-        <option>NANTO</option>
-        <option>NICEO</option>
-        <option>ORLO</option>
-        <option>REIMO</option>
-        <option>STRABO</option>
-        <option>TURO-Adulte</option>
-        <option>TURO-Enfant</option>
-      </select>
+      <select id="nom-magasin" onchange="onMagasinChange()" style="width:100%;font-size:15px;font-weight:500;border:none;background:transparent;color:#1a1a18;outline:none;padding:0;cursor:pointer;appearance:auto">
+      <option value="">— Sélectionner votre magasin —</option>
+      <option>ANGO</option>
+      <option>BIARRO</option>
+      <option>BORDO</option>
+      <option>CAENPO</option>
+      <option>GIRO</option>
+      <option>HAVRO</option>
+      <option>JISAM-Adulte</option>
+      <option>JISAM-Enfant</option>
+      <option>LYONO</option>
+      <option>MANSO</option>
+      <option>MARSEILLO</option>
+      <option>NANCEO</option>
+      <option>NANTO</option>
+      <option>NICEO</option>
+      <option>ORLO</option>
+      <option>REIMO</option>
+      <option>STRABO</option>
+      <option>TURO-Adulte</option>
+      <option>TURO-Enfant</option>
+    </select>
     </div>
   </div>
-  <div id="magasin-alert" style="background:#FCEBEB;border-radius:8px;padding:8px 12px;margin-bottom:1rem;font-size:12px;color:#791F1F;display:flex;align-items:center;gap:8px">
+  <div class="magasin-alert" id="magasin-alert">
     <i class="ti ti-lock" style="font-size:14px;flex-shrink:0"></i>
-    <span>Veuillez sélectionner votre magasin pour accéder aux étapes.</span>
+    <span>Veuillez sélectionner votre magasin pour accéder au formulaire.</span>
   </div>
 
-  <!-- Progression -->
-  <div class="prog-row">
-    <div class="prog-bar"><div class="prog-fill" id="home-fill" style="width:0%"></div></div>
-    <span class="prog-lbl" id="home-lbl">0 / 6 étapes</span>
-  </div>
+  <div class="section-title">Inventaire de caisse</div>
 
-  <!-- Tuiles -->
-  <div id="home-steps"></div>
+  <div class="form-zone locked" id="form-zone">
+
+    <div class="lock-overlay lockable" style="display:none" id="lock-overlay-msg"></div>
+
+    <div class="lockable">
+      <div style="font-size:13px;color:#5F5E5A;line-height:1.7;margin-bottom:1rem;padding:0 0.25rem">
+        L'objectif de cet inventaire est de vérifier que le total des espèces physiques présentes en magasin correspond exactement au solde théorique affiché dans Optimum. Tout écart doit être justifié.
+      </div>
+      <div class="warn">
+        <i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px"></i>
+        <span><strong>Rappel :</strong> vous devez compter <strong>toutes</strong> les espèces physiques en magasin — c'est-à-dire le <strong>tiroir caisse</strong> + le <strong>dépôt</strong>. N'oubliez pas le dépôt !</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-ticket" style="font-size:15px"></i>Billets</div>
+        <div class="money-grid">
+          <div class="money-row"><span class="money-label">× 500 €</span><input class="money-input" type="number" min="0" value="0" id="b500" oninput="calc()"><span class="money-val" id="v500">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 200 €</span><input class="money-input" type="number" min="0" value="0" id="b200" oninput="calc()"><span class="money-val" id="v200">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 100 €</span><input class="money-input" type="number" min="0" value="0" id="b100" oninput="calc()"><span class="money-val" id="v100">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 50 €</span><input class="money-input" type="number" min="0" value="0" id="b50" oninput="calc()"><span class="money-val" id="v50">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 20 €</span><input class="money-input" type="number" min="0" value="0" id="b20" oninput="calc()"><span class="money-val" id="v20">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 10 €</span><input class="money-input" type="number" min="0" value="0" id="b10" oninput="calc()"><span class="money-val" id="v10">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 5 €</span><input class="money-input" type="number" min="0" value="0" id="b5" oninput="calc()"><span class="money-val" id="v5">0,00 €</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-coin" style="font-size:15px"></i>Pièces</div>
+        <div class="money-grid">
+          <div class="money-row"><span class="money-label">× 2 €</span><input class="money-input" type="number" min="0" value="0" id="p200" oninput="calc()"><span class="money-val" id="vp200">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 1 €</span><input class="money-input" type="number" min="0" value="0" id="p100" oninput="calc()"><span class="money-val" id="vp100">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,50 €</span><input class="money-input" type="number" min="0" value="0" id="p50" oninput="calc()"><span class="money-val" id="vp50">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,20 €</span><input class="money-input" type="number" min="0" value="0" id="p20" oninput="calc()"><span class="money-val" id="vp20">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,10 €</span><input class="money-input" type="number" min="0" value="0" id="p10" oninput="calc()"><span class="money-val" id="vp10">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,05 €</span><input class="money-input" type="number" min="0" value="0" id="p5" oninput="calc()"><span class="money-val" id="vp5">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,02 €</span><input class="money-input" type="number" min="0" value="0" id="p2" oninput="calc()"><span class="money-val" id="vp2">0,00 €</span></div>
+          <div class="money-row"><span class="money-label">× 0,01 €</span><input class="money-input" type="number" min="0" value="0" id="p1" oninput="calc()"><span class="money-val" id="vp1">0,00 €</span></div>
+        </div>
+      </div>
+
+      <div class="totals-grid">
+        <div class="total-card"><div class="total-lbl">Total compté</div><div class="total-val" id="tot-compte">0,00 €</div></div>
+        <div style="background:#F5F4EF;border:1px solid #B8982A;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Solde Optimum</div>
+          <div style="display:flex;align-items:baseline;justify-content:center;gap:2px">
+            <input type="text" id="tot-optimum" oninput="calc()" placeholder="0,00" style="font-size:18px;font-weight:500;color:#1a1a18;text-align:right;border:none;background:transparent;width:80px;outline:none;padding:0">
+            <span style="font-size:18px;font-weight:500;color:#1a1a18">€</span>
+          </div>
+        </div>
+        <div class="total-card"><div class="total-lbl">Écart</div><div class="total-val" id="tot-ecart">—</div></div>
+      </div>
+
+      <div class="info-note">
+        <i class="ti ti-info-circle" style="font-size:15px;flex-shrink:0"></i>
+        <span>Le solde Optimum se trouve dans le module Caisse &gt; Clôture du logiciel Optimum.</span>
+      </div>
+
+      <div class="warn" id="warn-ecart" style="display:none">
+        <div style="width:100%">
+          <div style="display:flex;gap:8px;margin-bottom:8px"><i class="ti ti-alert-triangle" style="font-size:16px;flex-shrink:0;margin-top:1px"></i><span>Écart détecté — tout écart doit être justifié au centime près.</span></div>
+          <textarea id="ecart-comment" placeholder="Indiquez la raison de l'écart…" rows="2" style="width:100%;font-size:12px;padding:6px 8px;border:0.5px solid #d3d1c7;border-radius:6px;background:white;color:#1a1a18;resize:vertical"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-writing" style="font-size:15px"></i>Signature du directeur / directrice</div>
+        <div class="sig-block">
+          <div class="sig-row"><span class="sig-label">Nom</span><input type="text" id="sig-nom" placeholder="Prénom Nom" style="flex:1;font-size:13px;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px" oninput="checkReady()"></div>
+          <div class="sig-row"><span class="sig-label">Date</span><span class="sig-text" id="sig-date"></span></div>
+          <div class="sig-row">
+            <span class="sig-label" style="margin-top:4px">Signature</span>
+            <div style="flex:1">
+              <div class="canvas-wrap"><canvas id="sig-canvas" width="400" height="90"></canvas></div>
+              <div class="sig-actions">
+                <span style="font-size:11px;color:#888780">Signez à la souris ou au doigt</span>
+                <button class="btn-outline" onclick="clearSig()" style="padding:4px 10px;font-size:12px"><i class="ti ti-trash" style="font-size:13px"></i> Effacer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="btn-pdf" disabled onclick="generatePDF()" style="background:#444441"><i class="ti ti-file-download" style="font-size:16px"></i> Générer et afficher le PDF</button>
+        <button class="btn-primary" id="btn-valider" disabled onclick="validateCaisse()"><i class="ti ti-send" style="font-size:16px"></i> Valider et envoyer à la comptabilité</button>
+        <div class="confirm-box" id="conf-ok"><i class="ti ti-circle-check" style="font-size:18px"></i><span id="conf-ok-txt">Envoyé avec succès.</span></div>
+        <div class="error-box" id="conf-err"><i class="ti ti-alert-circle" style="font-size:18px"></i><span id="conf-err-txt">Erreur d'envoi.</span></div>
+      </div>
+    </div>
+  </div>
 
   <div class="save-notice"><i class="ti ti-device-floppy" style="font-size:14px"></i> Progression sauvegardée automatiquement sur cet ordinateur</div>
 </div>
 
-<!-- ÉTAPE 1 : Préparation du stock -->
-<div id="s-stock" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Préparation du stock</div>
-    <span style="font-size:12px;color:#888780" id="stock-mag-name"></span>
-  </div>
-
-  <!-- Intro responsabilisation -->
-  <div class="card">
-    <div class="card-title"><i class="ti ti-shield-check" style="font-size:15px"></i>Votre responsabilité en tant que directeur/directrice</div>
-    <div class="proc-text">La qualité de l'inventaire repose sur la <strong>rigueur de la préparation</strong>. Un stock mal rangé, des étiquettes manquantes ou des zones mal définies entraînent des erreurs de comptage, des écarts et une clôture plus longue.</div>
-    <div class="proc-text">Le <strong>23 septembre</strong>, votre rôle est de préparer le terrain pour que le comptage du <strong>30 septembre</strong> se déroule de façon fluide, exhaustive et sans stress.</div>
-  </div>
-
-  <!-- Checklist préparation physique -->
-  <div class="card">
-    <div class="card-title"><i class="ti ti-checkbox" style="font-size:15px"></i>Préparation physique du magasin</div>
-    <div id="checklist-stock"></div>
-  </div>
-
-  <!-- Tableau affectation collaborateurs -->
-  <div class="card">
-    <div class="card-title"><i class="ti ti-users" style="font-size:15px"></i>Affectation des binômes — Équipe du 30/09</div>
-    <div class="proc-text" style="margin-bottom:4px">Chaque binôme est composé d'<strong>un compteur</strong> et d'<strong>un agent de saisie logiciel</strong>, affectés à une ou plusieurs zones.</div>
-    <div class="tip" style="margin-bottom:12px"><i class="ti ti-bulb" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>Ce tableau est imprimable pour l'afficher en magasin le jour J.</div>
-    <div style="overflow-x:auto">
-      <table class="roles-table" id="roles-table">
-        <thead>
-          <tr>
-            <th style="width:90px">Binôme</th>
-            <th>Nom du collaborateur</th>
-            <th style="width:200px">Rôle</th>
-            <th>Zone(s) assignée(s)</th>
-            <th style="width:36px"></th>
-          </tr>
-        </thead>
-        <tbody id="roles-body"></tbody>
-      </table>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <button class="btn-outline" onclick="addBinome()" style="font-size:12px"><i class="ti ti-plus" style="font-size:13px"></i> Ajouter un binôme</button>
-      <button class="btn-outline" onclick="printRoles()" style="font-size:12px;color:#2D4A8A;border-color:#2D4A8A"><i class="ti ti-printer" style="font-size:13px"></i> Imprimer / Exporter PDF</button>
-    </div>
-  </div>
-
-  <button class="btn-primary" id="btn-stock" onclick="validateStep('stock')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-stock"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-<!-- ÉTAPE 2 : Rétrocessions & dépôt-vente -->
-<div id="s-retro" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Rétrocessions & dépôt-vente</div>
-    <span style="font-size:12px;color:#888780" id="retro-mag-name"></span>
-  </div>
-
-  <div class="warn"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div>Ces vérifications doivent être effectuées <strong>avant le 23 septembre 2026</strong>. Passé cette date, aucune rétrocession ne doit être initiée.</div></div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-arrows-exchange" style="font-size:15px"></i>Rétrocessions entre magasins</div>
-    <div class="proc-text">Vous devez vous assurer que <strong>toutes les opérations de rétrocession</strong> afférentes ont bien été effectuées et enregistrées dans Optimum.</div>
-    <div class="proc-text"><strong>Ne pas initier de nouvelles rétrocessions après le 23 septembre 2026.</strong> Tout mouvement de stock entre magasins après cette date faussera l'inventaire.</div>
-    <div id="checklist-retro"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-eyeglass" style="font-size:15px"></i>Prêts aux clients</div>
-    <div class="proc-text">Tous les <strong>prêts clients</strong> doivent impérativement être retournés en magasin avant le 23 septembre 2026.</div>
-    <div class="proc-text">Contactez dès maintenant les clients concernés pour récupérer les montures.</div>
-    <div id="checklist-prets"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-package" style="font-size:15px"></i>Dépôts-vente fournisseurs</div>
-    <div class="proc-text">Les dépôts-vente avec les fournisseurs lunetiers <strong>n'existent plus</strong>. Assurez-vous de ne plus en avoir dans votre stock.</div>
-    <div class="info"><i class="ti ti-info-circle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div>Si vous avez le moindre doute, contactez avant le 23 septembre :<br><strong>Deborah</strong> — <a href="tel:0285292550" style="color:#2D4A8A">02.85.29.25.50</a> &nbsp;|&nbsp; <strong>Baptiste</strong> — <a href="tel:0638634623" style="color:#2D4A8A">06.38.63.46.23</a></div></div>
-    <div id="checklist-depot"></div>
-  </div>
-
-  <button class="btn-primary" id="btn-retro" onclick="validateStep('retro')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-retro"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-<!-- ÉTAPE 3 : Bordereaux de livraison -->
-<div id="s-bl" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Bordereaux de livraison Optimum</div>
-    <span style="font-size:12px;color:#888780" id="bl-mag-name"></span>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-info-circle" style="font-size:15px"></i>Objectif</div>
-    <div class="proc-text">Le <strong>30 septembre au soir</strong>, l'ensemble des bordereaux <strong>« Fournisseurs »</strong> et <strong>« Retour fournisseurs »</strong> sur Optimum doit être rapproché d'une facture ou d'un avoir sur <strong>Yooz</strong>.</div>
-    <div class="proc-text">Un bordereau non archivé = du stock non rapproché d'une facture. Anticipez dès le 23 septembre pour éviter les urgences le 30 au soir.</div>
-  </div>
-
-  <!-- BL Fournisseurs -->
-  <div class="card">
-    <div class="card-title"><i class="ti ti-truck" style="font-size:15px"></i>Étape 1 — Bordereaux Fournisseurs</div>
-    <div class="proc-step">
-      <div class="proc-header"><div class="proc-num">1</div><div class="proc-title">Accéder aux bordereaux de livraison</div></div>
-      <div class="proc-text">Dans Optimum : <strong>Stock → Bordereaux livraisons</strong></div>
-    </div>
-    <div class="proc-step">
-      <div class="proc-header"><div class="proc-num">2</div><div class="proc-title">Filtrer les BL Fournisseurs</div></div>
-      <div class="proc-text">Paramétrez les filtres comme ci-dessous :</div>
-      <div style="background:#F5F4EF;border-radius:8px;padding:10px 12px;margin-top:6px;font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
-        <div><span style="color:#888780">Type de BL :</span> <strong>Fournisseur</strong></div>
-        <div><span style="color:#888780">Statut :</span> <strong>Tous</strong></div>
-        <div><span style="color:#888780">Date début :</span> <strong>30/09/2024</strong></div>
-        <div><span style="color:#888780">Date fin :</span> <strong>01/10/2025</strong></div>
-        <div><span style="color:#888780">BL archivés :</span> <strong>NON</strong></div>
-        <div><span style="color:#888780">Fournisseur :</span> <strong>Tous</strong></div>
-      </div>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='60' viewBox='0 0 600 60'%3E%3Crect width='600' height='60' fill='%23F0EDEF' rx='4'/%3E%3Ctext x='300' y='35' text-anchor='middle' font-family='system-ui' font-size='12' fill='%23888780'%3E📸 Capture écran Optimum — BL Fournisseurs%3C/text%3E%3C/svg%3E" class="proc-img" alt="Capture BL Fournisseurs" style="height:60px;object-fit:cover">
-    </div>
-    <div class="proc-step">
-      <div class="proc-header"><div class="proc-num">3</div><div class="proc-title">Traiter les bordereaux non archivés</div></div>
-      <div class="proc-text">Les bordereaux listés correspondent à du <strong>stock non rapproché</strong>. Pour chacun :</div>
-      <div style="background:#F5F4EF;border-radius:8px;padding:8px 12px;font-size:12px;margin-top:6px">
-        <div style="margin-bottom:4px">→ Récupérer la <strong>facture ou l'avoir</strong> auprès du fournisseur</div>
-        <div style="margin-bottom:4px">→ Envoyer le document sur <strong>Yooz</strong></div>
-        <div>→ Une fois le rapprochement effectué, le BL passera en archivé</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Retours fournisseurs -->
-  <div class="card">
-    <div class="card-title"><i class="ti ti-truck-return" style="font-size:15px"></i>Étape 2 — Retours Fournisseurs</div>
-    <div class="proc-step">
-      <div class="proc-header"><div class="proc-num">1</div><div class="proc-title">Filtrer les Retours fournisseurs</div></div>
-      <div class="proc-text">Reprenez la même recherche avec :</div>
-      <div style="background:#F5F4EF;border-radius:8px;padding:10px 12px;margin-top:6px;font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
-        <div><span style="color:#888780">Type de BL :</span> <strong>Retour fournisseur</strong></div>
-        <div><span style="color:#888780">Statut :</span> <strong>Tous</strong></div>
-        <div><span style="color:#888780">Date début :</span> <strong>30/09/2024</strong></div>
-        <div><span style="color:#888780">Date fin :</span> <strong>01/10/2025</strong></div>
-        <div><span style="color:#888780">BL archivés :</span> <strong>NON</strong></div>
-      </div>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='60' viewBox='0 0 600 60'%3E%3Crect width='600' height='60' fill='%23F0EDEF' rx='4'/%3E%3Ctext x='300' y='35' text-anchor='middle' font-family='system-ui' font-size='12' fill='%23888780'%3E📸 Capture écran Optimum — Retours Fournisseurs%3C/text%3E%3C/svg%3E" class="proc-img" alt="Capture Retours Fournisseurs" style="height:60px;object-fit:cover">
-    </div>
-    <div class="proc-step">
-      <div class="proc-header"><div class="proc-num">2</div><div class="proc-title">Cas particulier — colis reçu sans saisie</div></div>
-      <div class="proc-text">Si vous recevez un colis sans avoir le temps de le saisir informatiquement avant le 30/09 :</div>
-      <div class="warn" style="margin:8px 0 0"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div>Assurez-vous que les montures sont <strong>bien facturées avant le 30/09</strong> et indiquez en commentaire sur Yooz : <strong>« Montures reçues avant le 30/09/2026 non comprises dans le stock »</strong></div></div>
-    </div>
-  </div>
-
-  <div id="checklist-bl"></div>
-
-  <button class="btn-primary" id="btn-bl" onclick="validateStep('bl')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-bl"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-<!-- ÉTAPE 4 : Goodies -->
-<div id="s-goodies" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Inventaire des goodies</div>
-    <span style="font-size:12px;color:#888780" id="goodies-mag-name"></span>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-gift" style="font-size:15px"></i>Inventaire des goodies</div>
-    <div class="proc-text">Vous devez compléter le fichier d'inventaire des goodies sur SharePoint avant le 30 septembre.</div>
-    <div class="warn"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div><strong>Attention : comptez les pièces unitaires, pas les cartons.</strong> Un carton de 10 étuis = 10 unités à saisir dans le fichier.</div></div>
-    <a href="https://atheo.sharepoint.com/:x:/r/_layouts/15/Doc.aspx?sourcedoc=%7BA0423298-76E9-4CAC-9BE4-6CCE568AAB2B%7D&file=Edgard%20Opticiens%20-%20inventaire%20goodies.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1%3Fweb%3D1" target="_blank" style="text-decoration:none">
-      <button class="btn-outline" style="width:100%;justify-content:center;margin-bottom:8px;color:#2D4A8A;border-color:#2D4A8A">
-        <i class="ti ti-table" style="font-size:15px"></i> Ouvrir le fichier goodies sur SharePoint
-      </button>
-    </a>
-    <div id="checklist-goodies"></div>
-  </div>
-
-  <button class="btn-primary" id="btn-goodies" onclick="validateStep('goodies')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-goodies"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-<!-- ÉTAPE 5 : Immobilisations -->
-<div id="s-immo" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Inventaire des immobilisations</div>
-    <span style="font-size:12px;color:#888780" id="immo-mag-name"></span>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-upload" style="font-size:15px"></i>Importer le PDF du cabinet comptable</div>
-    <div class="proc-text">Le cabinet comptable vous a transmis votre tableau d'inventaire des immobilisations par mail. Importez-le ici pour générer automatiquement le formulaire de pointage.</div>
-    <div id="pdf-drop-zone" class="pdf-drop" onclick="document.getElementById('pdf-input').click()" ondragover="event.preventDefault()" ondrop="handleImmoDrop(event)">
-      <i class="ti ti-upload" style="font-size:28px;color:#B8982A;margin-bottom:8px;display:block"></i>
-      <div style="font-size:13px;font-weight:500;color:#1a1a18;margin-bottom:4px">Cliquez ou déposez votre PDF ici</div>
-      <div style="font-size:12px;color:#888780">Format accepté : PDF uniquement</div>
-    </div>
-    <input type="file" id="pdf-input" accept=".pdf" style="display:none" onchange="handleImmoFile(this.files[0])">
-    <div id="pdf-loading" style="display:none;text-align:center;padding:1rem;font-size:13px;color:#888780">
-      <i class="ti ti-loader" style="font-size:20px;display:block;margin-bottom:6px"></i>Extraction des données en cours…
-    </div>
-    <div id="pdf-error" style="display:none" class="warn"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0"></i><div id="pdf-error-msg"></div></div>
-  </div>
-
-  <!-- Formulaire de pointage généré dynamiquement -->
-  <div id="immo-form-zone" style="display:none">
-
-    <div class="tip"><i class="ti ti-bulb" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>Pour chaque bien, indiquez si le matériel est <strong>Présent</strong> ou <strong>Absent</strong>. Un commentaire est obligatoire pour tout bien absent. Les comptes grisés ne nécessitent pas de validation.</div>
-
-    <div id="immo-accounts-container"></div>
-
-    <!-- Nom + signature + export -->
-    <div class="card" style="margin-top:0">
-      <div class="card-title"><i class="ti ti-writing" style="font-size:15px"></i>Signature & export</div>
-
-      <div style="font-size:12px;color:#888780;margin-bottom:4px">Votre nom et prénom <span style="color:#A32D2D">*</span></div>
-      <input type="text" id="immo-nom" placeholder="Prénom Nom" style="width:100%;border:0.5px solid #d3d1c7;border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:14px">
-
-      <div style="font-size:12px;color:#888780;margin-bottom:6px">Signature du directeur / de la directrice <span style="color:#A32D2D">*</span></div>
-      <div style="position:relative;border:1.5px solid #d3d1c7;border-radius:8px;background:white;overflow:hidden;margin-bottom:6px">
-        <canvas id="sig-canvas" width="880" height="120" style="width:100%;height:100px;cursor:crosshair;display:block;touch-action:none"></canvas>
-        <div id="sig-placeholder" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#c0bdb4;pointer-events:none;white-space:nowrap">✍️ Signez ici avec votre souris ou votre doigt</div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-        <button class="btn-outline" onclick="clearSig()" style="font-size:11px;padding:4px 10px;color:#888780">
-          <i class="ti ti-eraser" style="font-size:12px"></i> Effacer la signature
-        </button>
-      </div>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-outline" onclick="exportImmoPointage()" style="flex:1;justify-content:center;color:#2D4A8A;border-color:#2D4A8A;min-width:160px">
-          <i class="ti ti-printer" style="font-size:14px"></i> Exporter / Imprimer
-        </button>
-        <button class="btn-outline" id="btn-send-immo" onclick="sendImmoValidation()" style="flex:1;justify-content:center;color:#3B6D11;border-color:#3B6D11;min-width:160px">
-          <i class="ti ti-mail" style="font-size:14px"></i> Envoyer par email
-        </button>
-      </div>
-      <div style="font-size:11px;color:#888780;margin-top:6px;text-align:center">Email envoyé à d.libre@groupe-edgard.com</div>
-    </div>
-  </div>
-
-  <button class="btn-primary" id="btn-immo" onclick="validateStep('immo')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-immo"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-
-<!-- ÉTAPE 5 : Procédure du 30/09 -->
-<div id="s-procedure" class="screen">
-  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Procédure du 30 septembre</div>
-    <span style="font-size:12px;color:#888780" id="proc-mag-name"></span>
-  </div>
-
-  <div class="tip"><i class="ti ti-bulb" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>Prenez connaissance de ce qui vous attend le 30 septembre afin de préparer votre équipe et d'anticiper les difficultés.</div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-list-check" style="font-size:15px"></i>Les 3 étapes du 30 septembre au soir</div>
-
-    <div class="summary-section" style="margin-bottom:1.25rem">
-      <h4><i class="ti ti-cash" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 1 — Inventaire de caisse</h4>
-      <p>Comptage des billets et pièces en caisse, saisie du solde Optimum, calcul de l'écart, commentaire obligatoire si écart, <strong>signature manuscrite</strong> du directeur/directrice + génération d'un PDF imprimable.</p>
-    </div>
-
-    <div class="summary-section" style="margin-bottom:1.25rem">
-      <h4><i class="ti ti-receipt" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 2 — Chèques différés</h4>
-      <p>Import du fichier Excel des chèques depuis Optimum, pointage de chaque chèque (Présent / Manquant), commentaire obligatoire si manquant, ajout manuel possible, <strong>envoi par email</strong> à d.libre@groupe-edgard.com.</p>
-    </div>
-
-    <div class="summary-section">
-      <h4><i class="ti ti-package" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 3 — Inventaire du stock</h4>
-      <p>Procédure complète dans Optimum en <strong>14 étapes</strong> avec captures d'écran : accès au module inventaire, saisie des comptages par zone, validation finale avant 23h59. <strong>Cette étape ne peut pas être annulée une fois validée.</strong></p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-clock" style="font-size:15px"></i>Planning indicatif du 30 septembre</div>
-    <div style="font-size:13px">
-      <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0ede4;align-items:center">
-        <span style="font-size:12px;color:#B8982A;font-weight:500;min-width:55px">18h00</span>
-        <span style="color:#5F5E5A">Fermeture magasin — début des opérations de clôture</span>
-      </div>
-      <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0ede4;align-items:center">
-        <span style="font-size:12px;color:#B8982A;font-weight:500;min-width:55px">18h00</span>
-        <span style="color:#5F5E5A">Inventaire de caisse (≈ 20 min)</span>
-      </div>
-      <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0ede4;align-items:center">
-        <span style="font-size:12px;color:#B8982A;font-weight:500;min-width:55px">18h30</span>
-        <span style="color:#5F5E5A">Pointage des chèques différés (≈ 30 min)</span>
-      </div>
-      <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0ede4;align-items:center">
-        <span style="font-size:12px;color:#B8982A;font-weight:500;min-width:55px">19h00</span>
-        <span style="color:#5F5E5A">Comptage du stock par zones (≈ 2 à 4h selon taille du magasin)</span>
-      </div>
-      <div style="display:flex;gap:10px;padding:8px 0;align-items:center">
-        <span style="font-size:12px;color:#A32D2D;font-weight:500;min-width:55px">23h59</span>
-        <span style="color:#A32D2D;font-weight:500">Limite — validation de l'inventaire dans Optimum</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="warn"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div>Une fois l'inventaire validé dans Optimum, il est <strong>définitif et non modifiable</strong>. Assurez-vous que tous les comptages sont corrects avant de valider.</div></div>
-
-  <!-- Case à cocher -->
-  <div class="card" style="margin-top:0">
-    <div class="card-title"><i class="ti ti-writing" style="font-size:15px"></i>Confirmation de lecture</div>
-    <div class="check-row" id="check-proc-row" onclick="toggleCheckProc()">
-      <input type="checkbox" id="check-proc" readonly>
-      <label for="check-proc">J'ai lu et compris la procédure du 30 septembre 2026. Je suis prêt(e) à organiser mon équipe pour le jour J.</label>
-    </div>
-  </div>
-
-  <button class="btn-primary" id="btn-procedure" onclick="validateStep('procedure')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-procedure"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
-
-<!-- FÉLICITATIONS -->
-<div id="s-finish" class="screen">
-  <div style="padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden">
-    <canvas id="fw-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></canvas>
-    <div style="position:relative;z-index:2">
-      <div style="font-size:48px;margin-bottom:0.5rem">🎉</div>
-      <div style="font-size:24px;font-weight:500;color:#1a1a18;margin-bottom:0.75rem">Préparation terminée !</div>
-      <div style="font-size:16px;font-weight:500;color:#B8982A;margin-bottom:0.5rem">Les 6 étapes du 23 septembre sont terminées.</div>
-      <div style="font-size:14px;color:#5F5E5A;line-height:1.8;max-width:420px;margin:0 auto 1.5rem">
-        Votre magasin est prêt pour l'inventaire du 30 septembre.<br>
-        <strong style="color:#1a1a18">Bonne clôture à toute votre équipe !</strong>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem">
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Préparation stock</div>
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Rétrocessions</div>
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Bordereaux</div>
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Goodies</div>
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Immobilisations</div>
-        <div style="background:#EAF3DE;border-radius:20px;padding:6px 14px;font-size:12px;color:#3B6D11;font-weight:500">✓ Procédure lue</div>
-      </div>
-      <button class="btn-outline" style="margin:0" onclick="goHomeNoFinish()"><i class="ti ti-arrow-left" style="font-size:14px"></i> Revoir le récapitulatif</button>
-    </div>
-  </div>
-</div>
-
-</div><!-- /wrap -->
-
 <script>
-const STEPS = [
-  {id:'stock', screen:'s-stock', icon:'ti-package', name:'Préparation du stock', sub:'Rangement, étiquetage, zones & affectation équipe'},
-  {id:'retro', screen:'s-retro', icon:'ti-arrows-exchange', name:'Rétrocessions & dépôt-vente', sub:'Vérifications avant le 23 septembre'},
-  {id:'bl', screen:'s-bl', icon:'ti-truck', name:'Bordereaux de livraison', sub:'BL Fournisseurs & Retours à rapprocher sur Yooz'},
-  {id:'goodies', screen:'s-goodies', icon:'ti-gift', name:'Inventaire des goodies', sub:'Comptage unitaire & saisie sur SharePoint'},
-  {id:'immo', screen:'s-immo', icon:'ti-file-description', name:'Inventaire des immobilisations', sub:'Validation du PDF & envoi de confirmation'},
-  {id:'procedure', screen:'s-procedure', icon:'ti-list-check', name:'Procédure du 30 septembre', sub:'Lecture et confirmation avant le jour J'},
-];
+/* ============================================================
+   CONFIGURATION N8N
+   Remplacez la valeur ci-dessous par l'URL du Webhook n8n
+   (nœud "Webhook", méthode POST) qui recevra les données du
+   formulaire au format JSON. Tant que cette valeur commence
+   par "REMPLACER", l'envoi webhook est simplement ignoré
+   (le PDF continue de fonctionner normalement).
+   ============================================================ */
+const WEBHOOK_URL = "https://edgard-opticiens.app.n8n.cloud/webhook/cloture-caisse";
 
-let done = {};
-let pdfImmoLoaded = false;
-let immoChecked = false;
-let procChecked = false;
-let rolesData = [];
-let immoData = {};
-let immoPointage = {};
+const BL=[{id:'b500',v:500},{id:'b200',v:200},{id:'b100',v:100},{id:'b50',v:50},{id:'b20',v:20},{id:'b10',v:10},{id:'b5',v:5}];
+const PC=[{id:'p200',v:2},{id:'p100',v:1},{id:'p50',v:0.5},{id:'p20',v:0.2},{id:'p10',v:0.1},{id:'p5',v:0.05},{id:'p2',v:0.02},{id:'p1',v:0.01}];
 
-// Checklists data
-const CHECKLIST_STOCK = [
-  'Toutes les montures sont correctement étiquetées',
-  'Les montures en vitrine sont identifiées et dénombrables',
-  'Le stock est rangé et accessible pour le comptage',
-  'Chaque binôme (1 compteur + 1 agent de saisie) est affecté à une ou plusieurs zones de comptage',
-];
-const CHECKLIST_RETRO = [
-  'Toutes les rétrocessions envoyées vers d\'autres magasins ont été enregistrées dans Optimum',
-  'Toutes les rétrocessions reçues d\'autres magasins ont été enregistrées dans Optimum',
-  'Aucune rétrocession ne sera initiée après le 23 septembre 2026',
-];
-const CHECKLIST_PRETS = [
-  'J\'ai contacté tous les clients ayant des montures en prêt',
-  'Toutes les montures prêtées ont été récupérées ou sont attendues avant le 30/09',
-];
-const CHECKLIST_DEPOT = [
-  'Je confirme ne pas avoir de dépôt-vente fournisseur actif dans mon stock',
-];
-const CHECKLIST_BL = [
-  'J\'ai vérifié les BL Fournisseurs non archivés et traité les rapprochements manquants',
-  'J\'ai vérifié les Retours Fournisseurs non archivés et traité les rapprochements manquants',
-];
-const CHECKLIST_GOODIES = [
-  'Le fichier inventaire goodies a été complété sur SharePoint',
-];
+function fmt(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
 
-let checkStates = {};
+function todayStr(){return new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});}
 
-function loadState(){
-  try{const s=localStorage.getItem('edgard_23sept_v1');if(s){const d=JSON.parse(s);done=d.done||{};checkStates=d.checkStates||{};rolesData=d.rolesData||[];pdfImmoLoaded=d.pdfImmoLoaded||false;immoChecked=d.immoChecked||false;procChecked=d.procChecked||false;immoData=d.immoData||{};immoPointage=d.immoPointage||{};}}catch(e){}
+function getNomMagasin(){
+  try{return localStorage.getItem('edgard_nom_magasin')||'';}catch(e){return '';}
 }
-function saveState(){
-  try{localStorage.setItem('edgard_23sept_v1',JSON.stringify({done,checkStates,rolesData,pdfImmoLoaded,immoChecked,procChecked,immoData,immoPointage}));}catch(e){}
-}
-function getNomMagasin(){return localStorage.getItem('edgard_23sept_nom')||'';}
-function saveNomMagasin(){
-  const v=document.getElementById('nom-magasin').value;
-  localStorage.setItem('edgard_23sept_nom',v);
-  propagateNom(v);renderHome();
-}
-function propagateNom(n){
-  ['stock','retro','bl','goodies','immo','proc'].forEach(id=>{
-    const el=document.getElementById(id+'-mag-name');
-    if(el)el.textContent=n;
-  });
+function setNomMagasin(nom){
+  try{localStorage.setItem('edgard_nom_magasin',nom);}catch(e){}
 }
 
-function renderHome(){
+function onMagasinChange(){
+  const nom=document.getElementById('nom-magasin').value;
+  setNomMagasin(nom);
+  updateLockState();
+  checkReady();
+}
+
+function updateLockState(){
   const nom=getNomMagasin();
-  const sel=document.getElementById('nom-magasin');
-  if(sel&&nom)sel.value=nom;
-  propagateNom(nom);
+  const locked=!nom;
+  const zone=document.getElementById('form-zone');
   const alertEl=document.getElementById('magasin-alert');
-  const n=Object.keys(done).filter(k=>done[k]).length;
-  document.getElementById('home-fill').style.width=(n/STEPS.length*100)+'%';
-  document.getElementById('home-lbl').textContent=n+' / '+STEPS.length+' étapes';
-  const c=document.getElementById('home-steps');
-  if(!nom){alertEl.style.display='flex';c.innerHTML='';return;}
-  alertEl.style.display='none';
-  c.innerHTML='';
-  STEPS.forEach(s=>{
-    const ok=!!done[s.id];
-    const div=document.createElement('div');
-    div.className='step-tile'+(ok?' done':'');
-    if(ok)div.style.cursor='default';
-    else div.onclick=function(){openStep(s.screen);};
-    div.innerHTML=
-      '<div class="tile-icon'+(ok?' done':' active')+'"><i class="ti '+s.icon+'"></i></div>'+
-      '<div class="tile-info"><div class="tile-name">'+s.name+'</div><div class="tile-sub">'+s.sub+'</div></div>'+
-      (ok?'<span class="badge b-done"><i class="ti ti-check" style="font-size:10px"></i> Terminé</span>':'<span class="badge b-active">À faire</span>');
-    if(ok){
-      const btn=document.createElement('button');
-      btn.style.cssText='font-size:11px;padding:3px 9px;border-radius:20px;border:0.5px solid #d3d1c7;background:none;cursor:pointer;color:#888780;white-space:nowrap;margin-left:4px';
-      btn.title='Modifier';
-      btn.innerHTML='<i class="ti ti-rotate-left" style="font-size:12px"></i> Modifier';
-      btn.onclick=function(e){e.stopPropagation();undoStep(s.id,s.screen);};
-      div.appendChild(btn);
-    }
-    c.appendChild(div);
-  });
+  const overlay=document.getElementById('lock-overlay-msg');
+  zone.classList.toggle('locked',locked);
+  alertEl.style.display=locked?'flex':'none';
+  overlay.innerHTML=locked?'<i class="ti ti-lock" style="font-size:18px;color:#B8982A"></i><span>Sélectionnez votre magasin ci-dessus pour déverrouiller le formulaire.</span>':'';
 }
 
-function openStep(screen){
-  show(screen);
-  if(screen==='s-stock')restoreStock();
-  if(screen==='s-retro')restoreRetro();
-  if(screen==='s-bl')restoreBl();
-  if(screen==='s-goodies')restoreGoodies();
-  if(screen==='s-immo')restoreImmo();
-  if(screen==='s-procedure')restoreProc();
-}
-function goHome(){const n=Object.keys(done).filter(k=>done[k]).length;if(n===STEPS.length&&!sessionStorage.getItem('23_finished')){sessionStorage.setItem('23_finished','1');show('s-finish');startFireworks();}else{show('s-home');renderHome();}}
-function goHomeNoFinish(){show('s-home');renderHome();}
-function undoStep(id,screen){done[id]=false;saveState();openStep(screen);}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-
-function validateStep(id){
-  done[id]=true;saveState();
-  const box=document.getElementById('conf-'+id);
-  box.style.display='flex';
-  setTimeout(()=>{box.style.display='none';goHome();},1500);
+function calc(){
+  let t=0;
+  BL.forEach(b=>{const n=parseInt(document.getElementById(b.id).value)||0;const v=n*b.v;t+=v;document.getElementById('v'+b.id.replace('b','')).textContent=fmt(v);});
+  PC.forEach(p=>{const n=parseInt(document.getElementById(p.id).value)||0;const v=Math.round(n*p.v*100)/100;t+=v;document.getElementById('vp'+p.id.replace('p','')).textContent=fmt(v);});
+  t=Math.round(t*100)/100;
+  document.getElementById('tot-compte').textContent=fmt(t);
+  const optRaw=document.getElementById('tot-optimum').value.replace(',','.');
+  const opt=parseFloat(optRaw);
+  const el=document.getElementById('tot-ecart');
+  if(!isNaN(opt)){const e=Math.round((t-opt)*100)/100;el.textContent=(e>=0?'+':'')+fmt(e);el.className='total-val '+(e===0?'ok':'bad');document.getElementById('warn-ecart').style.display=e!==0?'flex':'none';}
+  else{el.textContent='—';el.className='total-val';document.getElementById('warn-ecart').style.display='none';}
+  saveCaisse();
+  checkReady();
 }
 
-// Checklists génériques
-function renderChecklist(containerId, items, prefix){
-  const c=document.getElementById(containerId);
-  if(!c)return;
-  c.innerHTML='';
-  items.forEach((item,i)=>{
-    const key=prefix+'_'+i;
-    const checked=!!checkStates[key];
-    const div=document.createElement('div');
-    div.className='check-row'+(checked?' checked':'');
-    div.id='cr-'+prefix+'-'+i;
-    div.onclick=function(){toggleCheck(prefix,i,containerId);};
-    const cb=document.createElement('input');
-    cb.type='checkbox';
-    cb.id='cb-'+prefix+'-'+i;
-    cb.checked=checked;
-    cb.readOnly=true;
-    const lbl=document.createElement('label');
-    lbl.htmlFor='cb-'+prefix+'-'+i;
-    lbl.textContent=item;
-    div.appendChild(cb);
-    div.appendChild(lbl);
-    c.appendChild(div);
-  });
-}
-function toggleCheck(prefix,i,containerId){
-  const key=prefix+'_'+i;
-  checkStates[key]=!checkStates[key];
-  saveState();
-  const row=document.getElementById('cr-'+prefix+'-'+i);
-  const cb=document.getElementById('cb-'+prefix+'-'+i);
-  row.classList.toggle('checked',checkStates[key]);
-  cb.checked=checkStates[key];
-  checkStepReady();
-}
-function checkStepReady(){
-  // stock
-  const stockOk=CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]);
-  const btn_stock=document.getElementById('btn-stock');
-  if(btn_stock)btn_stock.disabled=!stockOk;
-  // retro
-  const retroOk=[...Array(CHECKLIST_RETRO.length).keys()].every(i=>checkStates['retro_'+i])
-    && [...Array(CHECKLIST_PRETS.length).keys()].every(i=>checkStates['prets_'+i])
-    && [...Array(CHECKLIST_DEPOT.length).keys()].every(i=>checkStates['depot_'+i]);
-  const btn_retro=document.getElementById('btn-retro');
-  if(btn_retro)btn_retro.disabled=!retroOk;
-  // bl
-  const blOk=CHECKLIST_BL.every((_,i)=>checkStates['bl_'+i]);
-  const btn_bl=document.getElementById('btn-bl');
-  if(btn_bl)btn_bl.disabled=!blOk;
-  // goodies
-  const goodiesOk=CHECKLIST_GOODIES.every((_,i)=>checkStates['goodies_'+i]);
-  const btn_goodies=document.getElementById('btn-goodies');
-  if(btn_goodies)btn_goodies.disabled=!goodiesOk;
-  // immo
-  const btn_immo=document.getElementById('btn-immo');
-  if(btn_immo)btn_immo.disabled=!immoChecked;
-  // procedure
-  const btn_proc=document.getElementById('btn-procedure');
-  if(btn_proc)btn_proc.disabled=!procChecked;
+function saveCaisse(){
+  try{
+    const d={};
+    [...BL,...PC].forEach(x=>{d[x.id]=document.getElementById(x.id).value;});
+    d.opt=document.getElementById('tot-optimum').value;
+    d.ecartComment=document.getElementById('ecart-comment')?document.getElementById('ecart-comment').value:'';
+    d.sigNom=document.getElementById('sig-nom').value;
+    localStorage.setItem('edgard_caisse',JSON.stringify(d));
+  }catch(e){}
 }
 
-function restoreStock(){
-  renderChecklist('checklist-stock',CHECKLIST_STOCK,'stock');
-  renderRolesTable();
-  checkStepReady();
+function restoreCaisse(){
+  try{
+    const d=JSON.parse(localStorage.getItem('edgard_caisse')||'{}');
+    Object.keys(d).forEach(k=>{const el=document.getElementById(k);if(el)el.value=d[k];});
+    if(d.opt)document.getElementById('tot-optimum').value=d.opt;
+    if(d.ecartComment&&document.getElementById('ecart-comment'))document.getElementById('ecart-comment').value=d.ecartComment;
+    if(d.sigNom)document.getElementById('sig-nom').value=d.sigNom;
+  }catch(e){}
 }
-function restoreRetro(){
-  renderChecklist('checklist-retro',CHECKLIST_RETRO,'retro');
-  renderChecklist('checklist-prets',CHECKLIST_PRETS,'prets');
-  renderChecklist('checklist-depot',CHECKLIST_DEPOT,'depot');
-  checkStepReady();
-}
-function restoreBl(){
-  const c=document.getElementById('checklist-bl');
-  if(c){c.innerHTML='<div style="margin-top:1rem"><div class="card-title" style="margin-top:4px"><i class="ti ti-checkbox" style="font-size:15px"></i>Confirmations</div></div>';}
-  renderChecklist('checklist-bl',CHECKLIST_BL,'bl');
-  checkStepReady();
-}
-function restoreGoodies(){
-  renderChecklist('checklist-goodies',CHECKLIST_GOODIES,'goodies');
-  checkStepReady();
-}
-// =================== SIGNATURE CANVAS ===================
-function initSigCanvas(){
+
+function isSigEmpty(){
   const canvas=document.getElementById('sig-canvas');
-  if(!canvas||canvas.dataset.init)return;
-  canvas.dataset.init='1';
   const ctx=canvas.getContext('2d');
-  ctx.strokeStyle='#1a1a18';
-  ctx.lineWidth=2;
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  let drawing=false;
-  let lastX=0,lastY=0;
-
-  function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/r.width;
-    const scaleY=canvas.height/r.height;
-    if(e.touches){
-      return {x:(e.touches[0].clientX-r.left)*scaleX, y:(e.touches[0].clientY-r.top)*scaleY};
-    }
-    return {x:(e.clientX-r.left)*scaleX, y:(e.clientY-r.top)*scaleY};
-  }
-
-  function startDraw(e){
-    e.preventDefault();
-    drawing=true;
-    const pos=getPos(e);
-    lastX=pos.x;lastY=pos.y;
-    ctx.beginPath();ctx.moveTo(lastX,lastY);
-  }
-  function draw(e){
-    e.preventDefault();
-    if(!drawing)return;
-    const pos=getPos(e);
-    ctx.lineTo(pos.x,pos.y);
-    ctx.stroke();
-    lastX=pos.x;lastY=pos.y;
-    // Marquer comme signé
-    canvas.dataset.signed='1';
-    const ph=document.getElementById('sig-placeholder');
-    if(ph)ph.style.display='none';
-  }
-  function endDraw(e){drawing=false;}
-
-  canvas.addEventListener('mousedown',startDraw);
-  canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('mouseup',endDraw);
-  canvas.addEventListener('mouseleave',endDraw);
-  canvas.addEventListener('touchstart',startDraw,{passive:false});
-  canvas.addEventListener('touchmove',draw,{passive:false});
-  canvas.addEventListener('touchend',endDraw);
+  const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  for(let i=3;i<data.length;i+=4){if(data[i]!==0)return false;}
+  return true;
 }
 
-function clearSig(){
+function checkReady(){
+  const magasin=getNomMagasin();
+  const nom=document.getElementById('sig-nom').value.trim();
+  const opt=document.getElementById('tot-optimum').value.trim();
+  const ready=!!(magasin&&nom&&opt);
+  document.getElementById('btn-pdf').disabled=!ready;
+  document.getElementById('btn-valider').disabled=!ready;
+}
+
+function generatePDF(){
+  const magasin=getNomMagasin();
+  const nom=document.getElementById('sig-nom').value.trim();
+  const date=document.getElementById('sig-date').textContent;
+  const compte=document.getElementById('tot-compte').textContent;
+  const optimum=document.getElementById('tot-optimum').value;
+  const ecart=document.getElementById('tot-ecart').textContent;
+  const ecartComment=document.getElementById('ecart-comment')?document.getElementById('ecart-comment').value:'';
   const canvas=document.getElementById('sig-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  delete canvas.dataset.signed;
-  const ph=document.getElementById('sig-placeholder');
-  if(ph)ph.style.display='';
-}
+  const sigData=canvas.toDataURL('image/png');
 
+  const BLnames=[['500 €','b500'],['200 €','b200'],['100 €','b100'],['50 €','b50'],['20 €','b20'],['10 €','b10'],['5 €','b5']];
+  const PCnames=[['2 €','p200'],['1 €','p100'],['0,50 €','p50'],['0,20 €','p20'],['0,10 €','p10'],['0,05 €','p5'],['0,02 €','p2'],['0,01 €','p1']];
 
-function restoreImmo(){
-  checkStepReady();
-  if(pdfImmoLoaded && Object.keys(immoData).length>0){
-    document.getElementById('immo-form-zone').style.display='block';
-    renderImmoForm();
-  }
-  // Initialiser le canvas signature (délai pour que le DOM soit rendu)
-  setTimeout(initSigCanvas, 50);
-}
-function restoreProc(){
-  const row=document.getElementById('check-proc-row');
-  const cb=document.getElementById('check-proc');
-  if(procChecked&&row){row.classList.add('checked');if(cb)cb.checked=true;}
-  checkStepReady();
-}
+  let billets='',pieces='';
+  BLnames.forEach(([lbl,id])=>{const n=document.getElementById(id).value||'0';const v=document.getElementById('v'+id.replace('b','')).textContent;billets+=`<tr><td>Billets × ${lbl}</td><td style="text-align:center">${n}</td><td style="text-align:right">${v}</td></tr>`;});
+  PCnames.forEach(([lbl,id])=>{const n=document.getElementById(id).value||'0';const v=document.getElementById('vp'+id.replace('p','')).textContent;pieces+=`<tr><td>Pièces × ${lbl}</td><td style="text-align:center">${n}</td><td style="text-align:right">${v}</td></tr>`;});
 
-// Tableau binômes
-const ROLES = ['Compteur', 'Agent de saisie logiciel'];
+  const ecartRow=ecart!=='—'&&ecart!=='+0,00 €'&&ecart!=='0,00 €'?`<tr style="color:#A32D2D"><td colspan="2"><strong>Commentaire écart :</strong> ${ecartComment||'—'}</td></tr>`:'';
 
-function renderRolesTable(){
-  const tbody=document.getElementById('roles-body');
-  if(!tbody)return;
-  if(rolesData.length===0){
-    rolesData=[
-      {nom:'',role:'Compteur',zone:''},
-      {nom:'',role:'Agent de saisie logiciel',zone:''},
-      {nom:'',role:'Compteur',zone:''},
-      {nom:'',role:'Agent de saisie logiciel',zone:''},
-      {nom:'',role:'Compteur',zone:''},
-      {nom:'',role:'Agent de saisie logiciel',zone:''},
-    ];
-  }
-  // Ensure even number of rows (complete binomes)
-  if(rolesData.length%2!==0){
-    rolesData.push({nom:'',role:'Agent de saisie logiciel',zone:''});
-    saveState();
-  }
-  let html='';
-  for(let i=0;i<rolesData.length;i++){
-    const r=rolesData[i];
-    const binomeNum=Math.floor(i/2)+1;
-    const isFirst=(i%2===0);
-    const isLast=(i%2===1);
-    const bgBinome=binomeNum%2===0?'#FAEEDA':'#EEF4FF';
-    const borderTop=isFirst?`border-top:2px solid ${binomeNum%2===0?'#B8982A':'#2D4A8A'};`:'';
-    if(isFirst){
-      html+=`<tr><td colspan="5" style="padding:6px 10px 2px;background:${bgBinome};${borderTop}font-size:11px;font-weight:500;color:${binomeNum%2===0?'#633806':'#2D4A8A'};letter-spacing:0.3px">BINÔME ${binomeNum}</td></tr>`;
-    }
-    html+=`<tr style="background:${bgBinome}">
-      <td style="padding:7px 10px;font-size:12px;color:#888780">${r.role==='Compteur'?'🔢':'💻'}</td>
-      <td style="padding:7px 10px"><input type="text" value="${r.nom||''}" placeholder="Prénom Nom" onchange="updateRole(${i},'nom',this.value)" style="width:100%;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px;font-size:13px;background:white;color:#1a1a18"></td>
-      <td style="padding:7px 10px">
-        <select onchange="updateRole(${i},'role',this.value)" style="width:100%;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px;font-size:13px;background:white;color:#1a1a18">
-          ${ROLES.map(ro=>`<option value="${ro}" ${r.role===ro?'selected':''}>${ro}</option>`).join('')}
-        </select>
-      </td>
-      <td style="padding:7px 10px"><input type="text" value="${r.zone||''}" placeholder="Ex : Vitrine, Zone 2…" onchange="updateRole(${i},'zone',this.value)" style="width:100%;border:0.5px solid #d3d1c7;border-radius:6px;padding:4px 8px;font-size:13px;background:white;color:#1a1a18"></td>
-      <td style="padding:7px 4px;text-align:center">${isLast?`<button onclick="removeBinome(${i-1})" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:2px 4px" title="Supprimer le binôme">×</button>`:'&nbsp;'}</td>
-    </tr>`;
-    if(isLast&&i<rolesData.length-1){
-      html+=`<tr><td colspan="5" style="height:6px;background:#F5F4EF"></td></tr>`;
-    }
-  }
-  tbody.innerHTML=html;
-}
-function updateRole(i,field,val){rolesData[i][field]=val;saveState();}
-function addBinome(){
-  rolesData.push({nom:'',role:'Compteur',zone:''});
-  rolesData.push({nom:'',role:'Agent de saisie logiciel',zone:''});
-  saveState();renderRolesTable();
-}
-function removeBinome(i){
-  rolesData.splice(i,2);
-  saveState();renderRolesTable();
-}
-function printRoles(){
-  const mag=getNomMagasin()||'Magasin';
-  let rows=rolesData.map((r,i)=>{
-    const binomeNum=Math.floor(i/2)+1;
-    const isFirst=(i%2===0);
-    let html='';
-    if(isFirst) html+=`<tr><td colspan="4" style="background:#f0ede4;padding:6px 10px;font-size:11px;font-weight:600;color:#633806;letter-spacing:0.5px">BINÔME ${binomeNum}</td></tr>`;
-    html+=`<tr>
-      <td style="padding:8px 10px;font-size:12px">${r.role==='Compteur'?'🔢':'💻'} ${r.role}</td>
-      <td style="padding:8px 10px;font-size:13px">${r.nom||'—'}</td>
-      <td style="padding:8px 10px;font-size:13px">${r.zone||'—'}</td>
-    </tr>`;
-    return html;
-  }).join('');
-  const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-  <title>Affectation binômes — ${mag}</title>
+  const pdfHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Inventaire caisse</title>
   <style>
-    body{font-family:system-ui,sans-serif;padding:2rem;color:#1a1a18;max-width:700px;margin:0 auto}
-    h1{font-size:18px;font-weight:600;margin-bottom:4px}
-    .sub{font-size:13px;color:#888780;margin-bottom:1.5rem}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#888780;padding:8px 10px;border-bottom:2px solid #e5e3da;text-align:left}
-    td{border-bottom:0.5px solid #f0ede4}
-    .footer{margin-top:2rem;font-size:11px;color:#888780;border-top:0.5px solid #e5e3da;padding-top:1rem}
-    @media print{body{padding:1rem}}
-  </style></head><body>
-  <h1>Affectation des binômes — 30 septembre 2026</h1>
-  <div class="sub">${mag} &nbsp;|&nbsp; Imprimé le ${new Date().toLocaleDateString('fr-FR')}</div>
-  <table>
-    <thead><tr><th>Rôle</th><th>Collaborateur</th><th>Zone(s)</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>
-  <div class="footer">Edgard Opticiens — Clôture annuelle 30 septembre 2026</div>
-  <script>window.onload=function(){window.print()}<\/script>
-  </body></html>`);
-  win.document.close();
-}
-
-// =================== IMMOBILISATIONS ===================
-// Comptes nécessitant validation physique
-const COMPTES_A_VALIDER = ['21540000','21810000','21814000','21830000','21840000'];
-const COMPTES_LABELS = {
-  '20110000':'Frais de constitution',
-  '20600000':'Droit au bail',
-  '21540000':'Matériel industriel',
-  '21810000':'Installations, agencements, aménagements',
-  '21814000':'Œuvres d\'art',
-  '21830000':'Matériel bureau & matériel informatique',
-  '21840000':'Mobilier',
-  '27100000':'Titres immobilisés',
-  '27510000':'Dépôts',
-};
-
-function handleImmoDrop(e){
-  e.preventDefault();
-  const f=e.dataTransfer.files[0];
-  if(f&&f.type==='application/pdf')handleImmoFile(f);
-}
-
-function handleImmoFile(f){
-  if(!f||f.type!=='application/pdf'){showImmoError('Veuillez importer un fichier PDF.');return;}
-  document.getElementById('pdf-loading').style.display='block';
-  document.getElementById('pdf-error').style.display='none';
-  document.getElementById('immo-form-zone').style.display='none';
-
-  const dropZone=document.getElementById('pdf-drop-zone');
-  dropZone.classList.add('has-file');
-  dropZone.innerHTML=`<i class="ti ti-file-check" style="font-size:24px;color:#3B6D11;margin-bottom:4px;display:block"></i><div style="font-size:13px;font-weight:500;color:#3B6D11">${f.name}</div><div style="font-size:11px;color:#888780;margin-top:2px">Cliquez pour changer le fichier</div>`;
-
-  const reader=new FileReader();
-  reader.onload=function(e){
-    const typedArray=new Uint8Array(e.target.result);
-    extractPdfText(typedArray, f.name);
-  };
-  reader.readAsArrayBuffer(f);
-}
-
-function extractPdfText(typedArray, fileName){
-  // Load PDF.js from CDN
-  if(!window.pdfjsLib){
-    const script=document.createElement('script');
-    script.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
-    script.onload=function(){
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-      runExtraction(typedArray, fileName);
-    };
-    script.onerror=function(){showImmoError('Impossible de charger la bibliothèque PDF. Vérifiez votre connexion internet.');};
-    document.head.appendChild(script);
-  } else {
-    runExtraction(typedArray, fileName);
-  }
-}
-
-function runExtraction(typedArray, fileName){
-  pdfjsLib.getDocument({data: typedArray}).promise.then(function(pdf){
-    const numPages=pdf.numPages;
-    const pagePromises=[];
-    for(let i=1;i<=numPages;i++){
-      const pageNum=i;
-      pagePromises.push(
-        pdf.getPage(pageNum).then(p=>p.getTextContent({normalizeWhitespace:true})).then(tc=>{
-          return tc.items.map(item=>({
-            str:item.str,
-            x:Math.round(item.transform[4]),
-            y:Math.round(item.transform[5]),
-            page:pageNum
-          }));
-        })
-      );
-    }
-    return Promise.all(pagePromises);
-  }).then(function(pages){
-    const allItems=pages.flat();
-    parseImmoByPosition(allItems, fileName);
-  }).catch(function(err){
-    showImmoError('Erreur lors de la lecture du PDF : '+err.message);
-  });
-}
-
-function parseImmoByPosition(items, fileName){
-  // Grouper par PAGE + Y pour éviter la fusion de lignes de pages différentes
-  immoData={};
-  let currentCompte=null;
-
-  const lines={};
-  items.forEach(item=>{
-    const s=item.str.trim();
-    if(!s)return;
-    const page=item.page||1;
-    const yKey=page+'_'+Math.round(item.y/2)*2;
-    if(!lines[yKey])lines[yKey]=[];
-    lines[yKey].push({str:s, x:item.x, y:item.y, page:page});
-  });
-
-  // Trier les clés : d'abord par page ASC, puis par Y DESC (haut → bas dans la page)
-  const sortedKeys=Object.keys(lines).sort((a,b)=>{
-    const [pa,ya]=a.split('_').map(Number);
-    const [pb,yb]=b.split('_').map(Number);
-    if(pa!==pb)return pa-pb;
-    return yb-ya; // Y décroissant = haut de page en premier
-  });
-
-  const lineArr=sortedKeys.map(k=>({
-    key:k,
-    items:lines[k].sort((a,b)=>a.x-b.x),
-    str:lines[k].sort((a,b)=>a.x-b.x).map(i=>i.str).join(' ')
-  }));
-
-  lineArr.forEach((line, lineIdx)=>{
-    const {items:lineItems, str:lineStr}=line;
-
-    // Détecter header de compte : "Com pte n° 20110000" ou "Compte n° 20110000"
-    // PDF.js fragmente "Compte" en "Com pte" sur ce document
-    const compteMatch=lineStr.match(/Com\s*pte\s+n°\s*(\d{8})|Compte\s+n°\s*(\d{8})/);
-    if(compteMatch){
-      currentCompte=compteMatch[1]||compteMatch[2];
-      if(!immoData[currentCompte])immoData[currentCompte]=[];
-      return;
-    }
-
-    if(!currentCompte)return;
-
-    // Ligne d'immo : premier token = code type B30102 ou C40202
-    const firstToken=lineItems[0]?lineItems[0].str.trim():'';
-    if(!/^[A-Z]\d{5}$/.test(firstToken))return;
-
-    const numImmo=firstToken;
-
-    // Date : dd/mm/yyyy dans la ligne
-    const dateMatch=lineStr.match(/(\d{2}\/\d{2}\/\d{4})/);
-    const dateAcq=dateMatch?dateMatch[1]:'';
-
-    // Valeur d'entrée : sur la ligne SUIVANTE (ligne 2 de l'immo)
-    // Structure : Valeur entrée | Amort. début | Dotation | Amort. fin | VNC
-    // La valeur d'entrée est le PREMIER montant de la ligne suivante (x le plus petit)
-    let valeur=0;
-    for(let j=lineIdx+1; j<Math.min(lineIdx+5, lineArr.length); j++){
-      const nextLine=lineArr[j];
-      const nf=nextLine.items[0]?nextLine.items[0].str.trim():'';
-      // Stopper si nouvelle immo ou nouveau compte
-      if(/^[A-Z]\d{5}$/.test(nf))break;
-      if(/Com\s*pte\s+n°|Compte\s+n°|Sous-total/.test(nextLine.str))break;
-      // Chercher le premier montant (nombre avec virgule)
-      const firstNum=nextLine.items.find(i=>/^-?[\d\s]+,\d{2}$/.test(i.str.trim()));
-      if(firstNum){
-        valeur=parseFloat(firstNum.str.trim().replace(/\s/g,'').replace(',','.'));
-        break;
-      }
-    }
-
-    // Désignation : tous les tokens après numImmo, avant la date, hors nombres et durées
-    let desigTokens=[];
-    let pastFirst=false;
-    lineItems.forEach(item=>{
-      const s=item.str.trim();
-      if(!pastFirst){if(s===numImmo){pastFirst=true;} return;}
-      if(/^\d{2}\/\d{2}\/\d{4}$/.test(s))return;   // date
-      if(/^-?[\d\s]+,\d{2}$/.test(s))return;         // montant
-      if(/^\d+[,.]\d{2}$/.test(s))return;             // montant court
-      if(/^\d+\s*ans?\.?$/i.test(s))return;           // durée
-      if(/^[\d,.\s]+$/.test(s))return;                // nombre pur
-      if(/^1,00$/.test(s))return;                     // qté
-      if(!s)return;
-      desigTokens.push(s);
-    });
-
-    // Fallback : reconstruire depuis lineStr si désignation vide
-    if(desigTokens.length===0){
-      let raw=lineStr;
-      raw=raw.replace(new RegExp('^'+numImmo+'\s*'),'');
-      raw=raw.replace(/\d{2}\/\d{2}\/\d{4}/g,'');
-      raw=raw.replace(/-?[\d\s]+,\d{2}/g,'');
-      raw=raw.replace(/\d+\s*ans?\.?/gi,'');
-      raw=raw.replace(/1,00/g,'').replace(/\s+/g,' ').trim();
-      if(raw)desigTokens=[raw];
-    }
-
-    const designation=desigTokens.join(' ')
-      .replace(/\s+/g,' ').trim()
-      .substring(0,80)||'—';
-
-    immoData[currentCompte].push({numImmo, designation, dateAcq, valeur});
-  });
-
-  document.getElementById('pdf-loading').style.display='none';
-
-  if(Object.keys(immoData).length===0){
-    showImmoError('Aucune immobilisation détectée. Vérifiez que le PDF est bien celui fourni par votre cabinet comptable.');
-    return;
-  }
-
-  pdfImmoLoaded=true;
-  saveState();
-  renderImmoForm();
-  document.getElementById('immo-form-zone').style.display='block';
-  checkStepReady();
-}
-
-function showImmoError(msg){
-  document.getElementById('pdf-loading').style.display='none';
-  const err=document.getElementById('pdf-error');
-  err.style.display='flex';
-  document.getElementById('pdf-error-msg').textContent=msg;
-}
-
-function renderImmoForm(){
-  const container=document.getElementById('immo-accounts-container');
-  const comptes=Object.keys(immoData).sort();
-  let html='';
-
-  comptes.forEach(compte=>{
-    const items=immoData[compte];
-    const needsValidation=COMPTES_A_VALIDER.includes(compte);
-    const label=COMPTES_LABELS[compte]||'Compte '+compte;
-    const bgHeader=needsValidation?'#FAEEDA':'#F5F4EF';
-    const colorHeader=needsValidation?'#633806':'#888780';
-
-    html+=`<div class="card" style="margin-bottom:0.75rem">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
-        <div>
-          <span style="font-size:11px;font-weight:500;color:#888780;text-transform:uppercase;letter-spacing:0.4px">${compte}</span>
-          <div style="font-size:14px;font-weight:500;color:#1a1a18">${label}</div>
-        </div>
-        ${needsValidation
-          ? `<span class="badge b-active"><i class="ti ti-eye" style="font-size:10px"></i> À valider</span>`
-          : `<span class="badge b-todo">Sans validation</span>`}
-      </div>`;
-
-    if(needsValidation){
-      html+=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">
-        <thead><tr>
-          <th style="text-align:left;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px">N° Immo</th>
-          <th style="text-align:left;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px">Désignation</th>
-          <th style="text-align:right;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px">Valeur</th>
-          <th style="text-align:center;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px">Acq.</th>
-          <th style="text-align:center;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px;width:140px">Statut</th>
-          <th style="text-align:left;padding:5px 8px;border-bottom:0.5px solid #e5e3da;color:#888780;font-weight:500;font-size:11px">Commentaire</th>
-        </tr></thead><tbody>`;
-
-      items.forEach(item=>{
-        const key=compte+'_'+item.numImmo;
-        const p=immoPointage[key]||{statut:'',commentaire:''};
-        const rowBg=p.statut==='present'?'#EAF3DE':p.statut==='absent'?'#FCEBEB':'white';
-        const valeurStr=item.valeur?item.valeur.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €':'—';
-        html+=`<tr style="background:${rowBg}" id="irow-${key}">
-          <td style="padding:7px 8px;font-size:12px;font-weight:500;color:#B8982A;white-space:nowrap">${item.numImmo}</td>
-          <td style="padding:7px 8px;font-size:12px">${item.designation}</td>
-          <td style="padding:7px 8px;font-size:12px;text-align:right;white-space:nowrap;font-weight:500">${valeurStr}</td>
-          <td style="padding:7px 8px;font-size:11px;text-align:center;color:#5F5E5A;white-space:nowrap">${item.dateAcq||'—'}</td>
-          <td style="padding:5px 8px;text-align:center">
-            <select onchange="setImmoStatut('${key}',this.value)" style="font-size:11px;border:0.5px solid #d3d1c7;border-radius:6px;padding:3px 6px;background:white;width:100%">
-              <option value="" ${!p.statut?'selected':''}>-- Statut --</option>
-              <option value="present" ${p.statut==='present'?'selected':''}>✅ Présent</option>
-              <option value="absent" ${p.statut==='absent'?'selected':''}>❌ Absent</option>
-            </select>
-          </td>
-          <td style="padding:5px 8px">
-            <input type="text" id="icomment-${key}" value="${p.commentaire||''}" placeholder="${p.statut==='absent'?'Obligatoire (ex : mis au rebut, vendu…)':'Commentaire…'}" onchange="setImmoComment('${key}',this.value)" style="width:100%;border:0.5px solid ${p.statut==='absent'?'#A32D2D':'#d3d1c7'};border-radius:6px;padding:3px 6px;font-size:11px;background:${p.statut==='absent'?'#FFF5F5':'white'}">
-          </td>
-        </tr>`;
-      });
-      html+=`</tbody></table></div>`;
-    } else {
-      // Read-only display
-      html+=`<div style="opacity:0.55">`;
-      items.forEach(item=>{
-        html+=`<div style="display:flex;gap:10px;padding:5px 4px;border-bottom:0.5px solid #f0ede4;font-size:12px">
-          <span style="font-weight:500;color:#888780;min-width:60px">${item.numImmo}</span>
-          <span style="color:#5F5E5A">${item.designation}</span>
-        </div>`;
-      });
-      html+=`</div><div style="font-size:11px;color:#888780;margin-top:6px;font-style:italic">Ce compte ne nécessite pas de validation physique.</div>`;
-    }
-
-    html+=`</div>`;
-  });
-
-  container.innerHTML=html;
-  checkImmoComplete();
-}
-
-function setImmoStatut(key, val){
-  if(!immoPointage[key])immoPointage[key]={statut:'',commentaire:''};
-  immoPointage[key].statut=val;
-  const row=document.getElementById('irow-'+key);
-  if(row)row.style.background=val==='present'?'#EAF3DE':val==='absent'?'#FCEBEB':'white';
-  // Mettre en évidence le champ commentaire si absent
-  const commentInput=document.getElementById('icomment-'+key);
-  if(commentInput){
-    if(val==='absent'){
-      commentInput.style.borderColor='#A32D2D';
-      commentInput.style.background='#FFF5F5';
-      if(!commentInput.placeholder)commentInput.placeholder='Obligatoire (ex : mis au rebut, vendu, remplacé…)';
-    } else {
-      commentInput.style.borderColor='#d3d1c7';
-      commentInput.style.background='white';
-    }
-  }
-  saveState();checkImmoComplete();
-}
-function setImmoComment(key, val){
-  if(!immoPointage[key])immoPointage[key]={statut:'',commentaire:''};
-  immoPointage[key].commentaire=val;
-  saveState();
-}
-function checkImmoComplete(){
-  let allDone=true;
-  COMPTES_A_VALIDER.forEach(compte=>{
-    if(immoData[compte]){
-      immoData[compte].forEach(item=>{
-        const key=compte+'_'+item.numImmo;
-        const p=immoPointage[key]||{};
-        if(!p.statut)allDone=false;
-        // Commentaire obligatoire si absent
-        if(p.statut==='absent'&&!(p.commentaire&&p.commentaire.trim()))allDone=false;
-      });
-    }
-  });
-  immoChecked=allDone && pdfImmoLoaded && Object.values(immoData).some(a=>a.length>0);
-  saveState();checkStepReady();
-}
-
-function exportImmoPointage(){
-  const mag=getNomMagasin()||'Magasin';
-  const nom=document.getElementById('immo-nom').value.trim();
-  const date=new Date().toLocaleDateString('fr-FR');
-  // Validations
-  if(!nom){alert("Veuillez saisir votre nom et prénom avant d'imprimer.");return;}
-  const sigCanvasCheck=document.getElementById('sig-canvas');
-  if(sigCanvasCheck&&!sigCanvasCheck.dataset.signed){alert("Veuillez apposer votre signature avant d'imprimer.");return;}
-  let missingStatutsExp=[];
-  COMPTES_A_VALIDER.forEach(compte=>{
-    if(immoData[compte]){immoData[compte].forEach(item=>{
-      const key=compte+'_'+item.numImmo;
-      const p=immoPointage[key]||{};
-      if(!p.statut) missingStatutsExp.push(item.numImmo+' — '+item.designation);
-    });}
-  });
-  if(missingStatutsExp.length>0){
-    alert('Statut non renseigné pour '+missingStatutsExp.length+' bien(s) :\n\n'+missingStatutsExp.join('\n')+'\n\nVeuillez indiquer « Présent » ou « Absent » pour chacun avant d\'imprimer.');
-    return;
-  }
-  let missingCommentsExp=[];
-  COMPTES_A_VALIDER.forEach(compte=>{
-    if(immoData[compte]){immoData[compte].forEach(item=>{
-      const key=compte+'_'+item.numImmo;
-      const p=immoPointage[key]||{};
-      if(p.statut==='absent'&&!(p.commentaire&&p.commentaire.trim())){
-        missingCommentsExp.push(item.numImmo+' — '+item.designation);
-      }
-    });}
-  });
-  if(missingCommentsExp.length>0){
-    alert('Commentaire obligatoire pour les biens absents :\n\n'+missingCommentsExp.join('\n')+'\n\nExemples : « mis au rebut », « vendu le… », « remplacé par… »');
-    return;
-  }
-  const nomDisplay=nom||'—';
-  // Capturer la signature
-  const sigCanvas=document.getElementById('sig-canvas');
-  const sigImg=sigCanvas&&sigCanvas.dataset.signed?'<img src="'+sigCanvas.toDataURL()+'" style="max-height:60px;max-width:180px">':'<span style="color:#ccc;font-size:11px">Aucune signature</span>';
-  const comptes=Object.keys(immoData).sort();
-
-  let rows='';
-  comptes.forEach(compte=>{
-    const items=immoData[compte];
-    const label=COMPTES_LABELS[compte]||'Compte '+compte;
-    const needsValidation=COMPTES_A_VALIDER.includes(compte);
-    rows+=`<tr><td colspan="6" style="background:${needsValidation?'#FAEEDA':'#f5f4ef'};padding:8px 10px;font-weight:600;font-size:12px;color:${needsValidation?'#633806':'#888780'}">${compte} — ${label}${needsValidation?' (à valider)':' (sans validation)'}</td></tr>`;
-    items.forEach(item=>{
-      const key=compte+'_'+item.numImmo;
-      const p=immoPointage[key]||{statut:'',commentaire:''};
-      const statutLabel=p.statut==='present'?'✅ Présent':p.statut==='absent'?'❌ Absent':needsValidation?'— Non renseigné':'—';
-      const valeurStr=item.valeur?item.valeur.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €':'—';
-      rows+=`<tr>
-        <td style="padding:6px 10px;font-size:12px;color:#B8982A">${item.numImmo}</td>
-        <td style="padding:6px 10px;font-size:12px">${item.designation}</td>
-        <td style="padding:6px 10px;font-size:12px;text-align:right;font-weight:500">${valeurStr}</td>
-        <td style="padding:6px 10px;font-size:12px;color:#5F5E5A">${item.dateAcq||'—'}</td>
-        <td style="padding:6px 10px;font-size:12px;text-align:center">${statutLabel}</td>
-        <td style="padding:6px 10px;font-size:12px;color:#5F5E5A">${p.commentaire||''}</td>
-      </tr>`;
-    });
-  });
-
-  const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-  <title>Pointage immobilisations — ${mag}</title>
-  <style>
-    body{font-family:system-ui,sans-serif;padding:2rem;color:#1a1a18;max-width:900px;margin:0 auto}
-    h1{font-size:18px;font-weight:600;margin-bottom:4px}
-    .meta{font-size:13px;color:#888780;margin-bottom:1.5rem}
-    table{width:100%;border-collapse:collapse;font-size:12px}
-    th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#888780;padding:7px 10px;border-bottom:2px solid #e5e3da;text-align:left}
-    td{border-bottom:0.5px solid #f0ede4}
-    @media print{body{padding:1rem}}
-  </style></head><body>
-  <h1>Pointage inventaire des immobilisations — 30 septembre 2026</h1>
-  <div class="meta">${mag} &nbsp;|&nbsp; Directeur/Directrice : ${nomDisplay} &nbsp;|&nbsp; Date : ${date}</div>
-  <table>
-    <thead><tr><th>N° Immo</th><th>Désignation</th><th style="text-align:right">Valeur</th><th>Acquisition</th><th style="width:130px;text-align:center">Statut</th><th>Commentaire</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>
-  <div style="margin-top:2rem;display:flex;justify-content:space-between;align-items:flex-end;border-top:0.5px solid #e5e3da;padding-top:1rem">
-    <span style="font-size:11px;color:#888780">Edgard Opticiens — Clôture annuelle 30 septembre 2026</span>
-    <div style="text-align:center">
-      <div style="font-size:11px;color:#888780;margin-bottom:4px">Signature — ${nomDisplay}</div>
-      <div style="border:1px solid #ccc;border-radius:4px;padding:4px;display:inline-block">${sigImg}</div>
-      <div style="border-top:1px solid #888;width:180px;margin:0 auto;padding-top:4px;font-size:10px;color:#888780">${nomDisplay}</div>
-    </div>
+    body{font-family:Arial,sans-serif;font-size:12px;color:#1a1a18;padding:20px;max-width:700px;margin:0 auto}
+    .logo{font-size:22px;font-weight:bold;letter-spacing:2px;color:#B8982A;text-align:center;margin-bottom:4px}
+    .subtitle{text-align:center;font-size:13px;color:#666;margin-bottom:20px}
+    table{width:100%;border-collapse:collapse;margin-bottom:14px}
+    th{background:#F5F4EF;padding:6px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border:0.5px solid #e0ddd6}
+    td{padding:5px 10px;border:0.5px solid #e0ddd6}
+    .section{font-weight:bold;font-size:12px;color:#B8982A;margin:12px 0 6px;text-transform:uppercase;letter-spacing:0.5px}
+    .totals{background:#F5F4EF;padding:12px;border-radius:6px;margin-bottom:14px}
+    .total-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+    .total-row.ecart{color:#A32D2D;font-weight:bold}
+    .sig-section{border:1px solid #d3d1c7;border-radius:8px;padding:14px;margin-top:14px}
+    .sig-line{display:flex;gap:20px;margin-bottom:10px;font-size:12px}
+    .sig-key{color:#888;min-width:80px}
+    .sig-val{font-weight:500}
+    @media print{body{padding:10px}}
+  </style>
+  </head><body>
+  <div class="logo">EDGARD OPTICIENS</div>
+  <div class="subtitle">Inventaire de caisse</div>
+  ${magasin?`<div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:16px">Magasin : ${magasin}</div>`:''}
+  <div class="section">Billets</div>
+  <table><thead><tr><th>Coupure</th><th style="text-align:center">Quantité</th><th style="text-align:right">Montant</th></tr></thead><tbody>${billets}</tbody></table>
+  <div class="section">Pièces</div>
+  <table><thead><tr><th>Coupure</th><th style="text-align:center">Quantité</th><th style="text-align:right">Montant</th></tr></thead><tbody>${pieces}</tbody></table>
+  <div class="totals">
+    <div class="total-row"><span>Total compté</span><strong>${compte}</strong></div>
+    <div class="total-row"><span>Solde Optimum</span><strong>${optimum?optimum+' €':'—'}</strong></div>
+    <div class="total-row ${ecart!=='—'&&ecart!=='+0,00 €'?'ecart':''}"><span>Écart</span><strong>${ecart}</strong></div>
+    ${ecartRow}
   </div>
-  <script>window.onload=function(){window.print()}<\/script>
-  </body></html>`);
-  win.document.close();
+  <div class="sig-section">
+    <div style="font-weight:500;font-size:13px;margin-bottom:10px">Signature du directeur / directrice</div>
+    <div class="sig-line"><span class="sig-key">Nom</span><span class="sig-val">${nom}</span></div>
+    <div class="sig-line"><span class="sig-key">Date</span><span class="sig-val">${date}</span></div>
+    <div class="sig-line" style="align-items:flex-start"><span class="sig-key">Signature</span><img src="${sigData}" style="height:60px;border:0.5px solid #e0ddd6;border-radius:4px"></div>
+  </div>
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`;
+
+  const w=window.open('','_blank','width=800,height=700');
+  w.document.write(pdfHtml);
+  w.document.close();
 }
 
-function sendImmoValidation(){
-  const nom=document.getElementById('immo-nom').value.trim();
-  const mag=getNomMagasin();
-  const date=new Date().toLocaleDateString('fr-FR');
-  if(!nom){alert("Veuillez saisir votre nom et prénom avant d'envoyer.");return;}
-  // Vérifier signature canvas
-  const canvas=document.getElementById('sig-canvas');
-  if(canvas&&!canvas.dataset.signed){alert("Veuillez apposer votre signature avant d'envoyer.");return;}
-  // Vérifier statuts manquants
-  let missingStatuts=[];
-  COMPTES_A_VALIDER.forEach(compte=>{
-    if(immoData[compte]){immoData[compte].forEach(item=>{
-      const key=compte+'_'+item.numImmo;
-      const p=immoPointage[key]||{};
-      if(!p.statut) missingStatuts.push(item.numImmo+' — '+item.designation);
-    });}
-  });
-  if(missingStatuts.length>0){
-    alert('Statut non renseigné pour '+missingStatuts.length+' bien(s) :\n\n'+missingStatuts.join('\n')+'\n\nVeuillez indiquer « Présent » ou « Absent » pour chacun avant d\'envoyer.');
+function buildPayload(){
+  const billets={},pieces={};
+  BL.forEach(b=>{billets[b.v]=parseInt(document.getElementById(b.id).value)||0;});
+  PC.forEach(p=>{pieces[p.v]=parseInt(document.getElementById(p.id).value)||0;});
+  const optRaw=document.getElementById('tot-optimum').value.replace(',','.');
+  const compteRaw=document.getElementById('tot-compte').textContent.replace(/[^\d,.-]/g,'').replace(',','.');
+  return {
+    magasin:getNomMagasin(),
+    date_cloture:new Date().toISOString().slice(0,10),
+    date_signature:document.getElementById('sig-date').textContent,
+    signataire:document.getElementById('sig-nom').value.trim(),
+    billets,
+    pieces,
+    total_compte:parseFloat(compteRaw)||0,
+    solde_optimum:parseFloat(optRaw)||null,
+    ecart:document.getElementById('tot-ecart').textContent,
+    commentaire_ecart:document.getElementById('ecart-comment')?document.getElementById('ecart-comment').value:'',
+    signature_png_base64:document.getElementById('sig-canvas').toDataURL('image/png')
+  };
+}
+
+function showConf(ok,msg){
+  document.getElementById('conf-ok').style.display=ok?'flex':'none';
+  document.getElementById('conf-err').style.display=ok?'none':'flex';
+  if(ok)document.getElementById('conf-ok-txt').textContent=msg;
+  else document.getElementById('conf-err-txt').textContent=msg;
+}
+
+function validateCaisse(){
+  if(isSigEmpty()){
+    alert('Merci de signer avant de valider.');
     return;
   }
-  // Vérifier commentaires obligatoires pour les absents
-  let missingComments=[];
-  COMPTES_A_VALIDER.forEach(compte=>{
-    if(immoData[compte]){immoData[compte].forEach(item=>{
-      const key=compte+'_'+item.numImmo;
-      const p=immoPointage[key]||{};
-      if(p.statut==='absent'&&!(p.commentaire&&p.commentaire.trim())){
-        missingComments.push(item.numImmo+' — '+item.designation);
-      }
-    });}
-  });
-  if(missingComments.length>0){
-    alert('Commentaire obligatoire pour les biens absents :\n\n'+missingComments.join('\n')+'\n\nExemples : « mis au rebut », « vendu le… », « remplacé par… »');
+  document.getElementById('conf-ok').style.display='none';
+  document.getElementById('conf-err').style.display='none';
+
+  generatePDF();
+
+  const payload=buildPayload();
+
+  if(!WEBHOOK_URL || WEBHOOK_URL.startsWith('REMPLACER')){
+    showConf(true,'PDF généré. (Webhook n8n non configuré pour le moment — voir commentaire en haut du script.)');
     return;
   }
-  // Corps du mail : uniquement les biens absents
-  const comptes=Object.keys(immoData).sort();
-  let absents='';
-  let nbAbsents=0;
-  comptes.forEach(compte=>{
-    if(COMPTES_A_VALIDER.includes(compte)&&immoData[compte]){
-      const label=COMPTES_LABELS[compte]||compte;
-      let lignesCompte='';
-      immoData[compte].forEach(item=>{
-        const key=compte+'_'+item.numImmo;
-        const p=immoPointage[key]||{};
-        if(p.statut==='absent'){
-          lignesCompte+=item.numImmo+' | '+item.designation+(p.commentaire?' | '+p.commentaire:'')+'\n';
-          nbAbsents++;
-        }
-      });
-      if(lignesCompte) absents+='\n--- '+label+' ---\n'+lignesCompte;
-    }
+
+  fetch(WEBHOOK_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(r=>{
+    if(r.ok){showConf(true,'Données envoyées à la comptabilité avec succès.');}
+    else{showConf(false,'Le webhook a répondu avec une erreur (code '+r.status+').');}
+  }).catch(()=>{
+    showConf(false,"Impossible de contacter le webhook n8n. Vérifiez la connexion ou l'URL configurée.");
   });
-  const resumeAbsents=nbAbsents===0
-    ? '\nAucun bien absent — tous les biens ont été pointés comme présents.'
-    : '\nBiens absents ('+nbAbsents+') :'+absents;
-  const sujet=encodeURIComponent('Validation immobilisations — '+mag+' — 30/09/2026');
-  const corps=encodeURIComponent('Bonjour,\n\nJe vous transmets le pointage de l\'inventaire des immobilisations du 30 septembre 2026.\n\nMagasin : '+mag+'\nDirecteur/Directrice : '+nom+'\nDate : '+date+resumeAbsents+'\n\nCordialement,\n'+nom);
-  window.location.href='mailto:d.libre@groupe-edgard.com?subject='+sujet+'&body='+corps;
 }
-// =================== SIGNATURE CANVAS ===================
-function initSigCanvas(){
+
+// SIGNATURE CANVAS
+let drawing=false,lx=0,ly=0;
+function initCanvas(){
   const canvas=document.getElementById('sig-canvas');
-  if(!canvas||canvas.dataset.init)return;
-  canvas.dataset.init='1';
   const ctx=canvas.getContext('2d');
-  ctx.strokeStyle='#1a1a18';
-  ctx.lineWidth=2;
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  let drawing=false;
-  let lastX=0,lastY=0;
-
-  function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/r.width;
-    const scaleY=canvas.height/r.height;
-    if(e.touches){
-      return {x:(e.touches[0].clientX-r.left)*scaleX, y:(e.touches[0].clientY-r.top)*scaleY};
-    }
-    return {x:(e.clientX-r.left)*scaleX, y:(e.clientY-r.top)*scaleY};
-  }
-
-  function startDraw(e){
-    e.preventDefault();
-    drawing=true;
-    const pos=getPos(e);
-    lastX=pos.x;lastY=pos.y;
-    ctx.beginPath();ctx.moveTo(lastX,lastY);
-  }
-  function draw(e){
-    e.preventDefault();
-    if(!drawing)return;
-    const pos=getPos(e);
-    ctx.lineTo(pos.x,pos.y);
-    ctx.stroke();
-    lastX=pos.x;lastY=pos.y;
-    // Marquer comme signé
-    canvas.dataset.signed='1';
-    const ph=document.getElementById('sig-placeholder');
-    if(ph)ph.style.display='none';
-  }
-  function endDraw(e){drawing=false;}
-
-  canvas.addEventListener('mousedown',startDraw);
-  canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('mouseup',endDraw);
-  canvas.addEventListener('mouseleave',endDraw);
-  canvas.addEventListener('touchstart',startDraw,{passive:false});
-  canvas.addEventListener('touchmove',draw,{passive:false});
-  canvas.addEventListener('touchend',endDraw);
+  ctx.strokeStyle='#1a1a18';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+  function pos(e){const r=canvas.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)};}
+  canvas.addEventListener('mousedown',e=>{drawing=true;const p=pos(e);lx=p.x;ly=p.y;});
+  canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;});
+  ['mouseup','mouseleave'].forEach(ev=>canvas.addEventListener(ev,()=>{drawing=false;checkReady();}));
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=pos(e);lx=p.x;ly=p.y;},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();lx=p.x;ly=p.y;},{passive:false});
+  canvas.addEventListener('touchend',()=>{drawing=false;checkReady();});
 }
+function clearSig(){document.getElementById('sig-canvas').getContext('2d').clearRect(0,0,400,90);checkReady();}
 
-function clearSig(){
-  const canvas=document.getElementById('sig-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  delete canvas.dataset.signed;
-  const ph=document.getElementById('sig-placeholder');
-  if(ph)ph.style.display='';
-}
-
-
-function restoreImmo(){
-  checkStepReady();
-  if(pdfImmoLoaded && Object.keys(immoData).length>0){
-    document.getElementById('immo-form-zone').style.display='block';
-    renderImmoForm();
-  }
-  // Initialiser le canvas signature (délai pour que le DOM soit rendu)
-  setTimeout(initSigCanvas, 50);
-}
-function toggleCheckProc(){
-  procChecked=!procChecked;
-  const row=document.getElementById('check-proc-row');
-  const cb=document.getElementById('check-proc');
-  row.classList.toggle('checked',procChecked);
-  cb.checked=procChecked;
-  saveState();checkStepReady();
-}
-
-// Fireworks
-function startFireworks(){
-  const canvas=document.getElementById('fw-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;
-  let particles=[];
-  function createBurst(x,y){
-    const colors=['#B8982A','#3B6D11','#633806','#F1EFE8','#888780'];
-    for(let i=0;i<60;i++){
-      const angle=Math.random()*Math.PI*2;
-      const speed=Math.random()*4+1;
-      particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:1,color:colors[Math.floor(Math.random()*colors.length)],size:Math.random()*4+2});
-    }
-  }
-  createBurst(canvas.width*0.3,canvas.height*0.4);
-  createBurst(canvas.width*0.7,canvas.height*0.3);
-  createBurst(canvas.width*0.5,canvas.height*0.5);
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles=particles.filter(p=>p.life>0.01);
-    particles.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.life*=0.97;
-      ctx.globalAlpha=p.life;ctx.fillStyle=p.color;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);ctx.fill();
-    });
-    ctx.globalAlpha=1;
-    if(particles.length>0)requestAnimationFrame(animate);
-  }
-  animate();
-  setTimeout(()=>{createBurst(canvas.width*0.2,canvas.height*0.6);createBurst(canvas.width*0.8,canvas.height*0.5);},600);
-}
-
-// Init
-loadState();
+// INIT
+document.getElementById('date-badge').textContent=todayStr();
+document.getElementById('sig-date').textContent=todayStr();
 const savedNom=getNomMagasin();
-if(savedNom){const sel=document.getElementById('nom-magasin');if(sel)sel.value=savedNom;}
-renderHome();
+if(savedNom)document.getElementById('nom-magasin').value=savedNom;
+updateLockState();
+initCanvas();
+restoreCaisse();
+calc();
+checkReady();
 </script>
 </body>
 </html>
