@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inventaire de caisse — Edgard Opticiens</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#F5F4EF;color:#1a1a18;min-height:100vh}
@@ -177,9 +179,8 @@ canvas{display:block;cursor:crosshair;touch-action:none;width:100%;height:90px}
           </div>
         </div>
 
-        <button class="btn-primary" id="btn-pdf" disabled onclick="generatePDF()" style="background:#444441"><i class="ti ti-file-download" style="font-size:16px"></i> Générer et afficher le PDF</button>
         <button class="btn-primary" id="btn-valider" disabled onclick="validateCaisse()"><i class="ti ti-send" style="font-size:16px"></i> Valider et envoyer à la comptabilité</button>
-        <div class="confirm-box" id="conf-ok"><i class="ti ti-circle-check" style="font-size:18px"></i><span id="conf-ok-txt">Envoyé avec succès.</span></div>
+        <div class="confirm-box" id="conf-ok"><i class="ti ti-circle-check" style="font-size:18px"></i><span id="conf-ok-txt">La caisse a bien été envoyée.</span></div>
         <div class="error-box" id="conf-err"><i class="ti ti-alert-circle" style="font-size:18px"></i><span id="conf-err-txt">Erreur d'envoi.</span></div>
       </div>
     </div>
@@ -191,11 +192,9 @@ canvas{display:block;cursor:crosshair;touch-action:none;width:100%;height:90px}
 <script>
 /* ============================================================
    CONFIGURATION N8N
-   Remplacez la valeur ci-dessous par l'URL du Webhook n8n
-   (nœud "Webhook", méthode POST) qui recevra les données du
-   formulaire au format JSON. Tant que cette valeur commence
-   par "REMPLACER", l'envoi webhook est simplement ignoré
-   (le PDF continue de fonctionner normalement).
+   URL du Webhook n8n (nœud "Webhook", méthode POST) qui reçoit
+   les données du formulaire au format JSON, ainsi que le PDF
+   généré côté navigateur (champ pdf_base64).
    ============================================================ */
 const WEBHOOK_URL = "https://edgard-opticiens.app.n8n.cloud/webhook/cloture-caisse";
 
@@ -280,11 +279,16 @@ function checkReady(){
   const nom=document.getElementById('sig-nom').value.trim();
   const opt=document.getElementById('tot-optimum').value.trim();
   const ready=!!(magasin&&nom&&opt);
-  document.getElementById('btn-pdf').disabled=!ready;
   document.getElementById('btn-valider').disabled=!ready;
 }
 
-function generatePDF(){
+// Construction du PDF (côté navigateur, avec jsPDF) — le PDF est
+// encodé en base64 et envoyé en pièce jointe au webhook n8n.
+// Il n'est ni affiché ni ouvert dans une nouvelle fenêtre.
+function buildPdf(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
   const magasin=getNomMagasin();
   const nom=document.getElementById('sig-nom').value.trim();
   const date=document.getElementById('sig-date').textContent;
@@ -292,62 +296,147 @@ function generatePDF(){
   const optimum=document.getElementById('tot-optimum').value;
   const ecart=document.getElementById('tot-ecart').textContent;
   const ecartComment=document.getElementById('ecart-comment')?document.getElementById('ecart-comment').value:'';
-  const canvas=document.getElementById('sig-canvas');
-  const sigData=canvas.toDataURL('image/png');
+  const sigData=document.getElementById('sig-canvas').toDataURL('image/png');
+  const hasEcart = ecart!=='—' && ecart!=='+0,00 €' && ecart!=='0,00 €';
+
+  const GOLD=[184,152,42], DARK=[26,26,24], GRAY=[95,94,90], LIGHT=[245,244,239], RED=[163,45,45], GREEN=[59,109,17], BORDER=[211,209,199];
+
+  // Bandeau d'en-tête
+  doc.setFillColor(...GOLD);
+  doc.rect(0,0,pageWidth,32,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
+  doc.text('EDGARD OPTICIENS', pageWidth/2, 14, {align:'center'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);
+  doc.text('Inventaire de caisse', pageWidth/2, 22, {align:'center'});
+
+  let y=42;
+  doc.setTextColor(...DARK);
+  if(magasin){
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(13);
+    doc.text('Magasin : '+magasin, 14, y);
+  }
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text('Clôture du '+date, pageWidth-14, y, {align:'right'});
+  y+=10;
+
+  function sectionLabel(text,yy){
+    doc.setFillColor(...LIGHT);
+    doc.rect(14, yy-5, pageWidth-28, 7, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...GOLD);
+    doc.text(text.toUpperCase(), 18, yy);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(...DARK);
+  }
+
+  sectionLabel('Billets', y); y+=6;
 
   const BLnames=[['500 €','b500'],['200 €','b200'],['100 €','b100'],['50 €','b50'],['20 €','b20'],['10 €','b10'],['5 €','b5']];
   const PCnames=[['2 €','p200'],['1 €','p100'],['0,50 €','p50'],['0,20 €','p20'],['0,10 €','p10'],['0,05 €','p5'],['0,02 €','p2'],['0,01 €','p1']];
+  const billetsRows=BLnames.map(([lbl,id])=>[lbl, document.getElementById(id).value||'0', document.getElementById('v'+id.replace('b','')).textContent]);
+  const piecesRows=PCnames.map(([lbl,id])=>[lbl, document.getElementById(id).value||'0', document.getElementById('vp'+id.replace('p','')).textContent]);
 
-  let billets='',pieces='';
-  BLnames.forEach(([lbl,id])=>{const n=document.getElementById(id).value||'0';const v=document.getElementById('v'+id.replace('b','')).textContent;billets+=`<tr><td>Billets × ${lbl}</td><td style="text-align:center">${n}</td><td style="text-align:right">${v}</td></tr>`;});
-  PCnames.forEach(([lbl,id])=>{const n=document.getElementById(id).value||'0';const v=document.getElementById('vp'+id.replace('p','')).textContent;pieces+=`<tr><td>Pièces × ${lbl}</td><td style="text-align:center">${n}</td><td style="text-align:right">${v}</td></tr>`;});
+  doc.autoTable({
+    startY:y,
+    head:[['Coupure','Quantité','Montant']],
+    body:billetsRows,
+    theme:'plain',
+    margin:{left:14,right:14},
+    headStyles:{fillColor:DARK,textColor:255,fontSize:9,fontStyle:'bold',cellPadding:2},
+    bodyStyles:{fontSize:9,textColor:DARK,cellPadding:2},
+    alternateRowStyles:{fillColor:LIGHT},
+    columnStyles:{1:{halign:'center'},2:{halign:'right'}}
+  });
+  y=doc.lastAutoTable.finalY+10;
 
-  const ecartRow=ecart!=='—'&&ecart!=='+0,00 €'&&ecart!=='0,00 €'?`<tr style="color:#A32D2D"><td colspan="2"><strong>Commentaire écart :</strong> ${ecartComment||'—'}</td></tr>`:'';
+  sectionLabel('Pièces', y); y+=6;
+  doc.autoTable({
+    startY:y,
+    head:[['Coupure','Quantité','Montant']],
+    body:piecesRows,
+    theme:'plain',
+    margin:{left:14,right:14},
+    headStyles:{fillColor:DARK,textColor:255,fontSize:9,fontStyle:'bold',cellPadding:2},
+    bodyStyles:{fontSize:9,textColor:DARK,cellPadding:2},
+    alternateRowStyles:{fillColor:LIGHT},
+    columnStyles:{1:{halign:'center'},2:{halign:'right'}}
+  });
+  y=doc.lastAutoTable.finalY+10;
 
-  const pdfHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Inventaire caisse</title>
-  <style>
-    body{font-family:Arial,sans-serif;font-size:12px;color:#1a1a18;padding:20px;max-width:700px;margin:0 auto}
-    .logo{font-size:22px;font-weight:bold;letter-spacing:2px;color:#B8982A;text-align:center;margin-bottom:4px}
-    .subtitle{text-align:center;font-size:13px;color:#666;margin-bottom:20px}
-    table{width:100%;border-collapse:collapse;margin-bottom:14px}
-    th{background:#F5F4EF;padding:6px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border:0.5px solid #e0ddd6}
-    td{padding:5px 10px;border:0.5px solid #e0ddd6}
-    .section{font-weight:bold;font-size:12px;color:#B8982A;margin:12px 0 6px;text-transform:uppercase;letter-spacing:0.5px}
-    .totals{background:#F5F4EF;padding:12px;border-radius:6px;margin-bottom:14px}
-    .total-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
-    .total-row.ecart{color:#A32D2D;font-weight:bold}
-    .sig-section{border:1px solid #d3d1c7;border-radius:8px;padding:14px;margin-top:14px}
-    .sig-line{display:flex;gap:20px;margin-bottom:10px;font-size:12px}
-    .sig-key{color:#888;min-width:80px}
-    .sig-val{font-weight:500}
-    @media print{body{padding:10px}}
-  </style>
-  </head><body>
-  <div class="logo">EDGARD OPTICIENS</div>
-  <div class="subtitle">Inventaire de caisse</div>
-  ${magasin?`<div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:16px">Magasin : ${magasin}</div>`:''}
-  <div class="section">Billets</div>
-  <table><thead><tr><th>Coupure</th><th style="text-align:center">Quantité</th><th style="text-align:right">Montant</th></tr></thead><tbody>${billets}</tbody></table>
-  <div class="section">Pièces</div>
-  <table><thead><tr><th>Coupure</th><th style="text-align:center">Quantité</th><th style="text-align:right">Montant</th></tr></thead><tbody>${pieces}</tbody></table>
-  <div class="totals">
-    <div class="total-row"><span>Total compté</span><strong>${compte}</strong></div>
-    <div class="total-row"><span>Solde Optimum</span><strong>${optimum?optimum+' €':'—'}</strong></div>
-    <div class="total-row ${ecart!=='—'&&ecart!=='+0,00 €'?'ecart':''}"><span>Écart</span><strong>${ecart}</strong></div>
-    ${ecartRow}
-  </div>
-  <div class="sig-section">
-    <div style="font-weight:500;font-size:13px;margin-bottom:10px">Signature du directeur / directrice</div>
-    <div class="sig-line"><span class="sig-key">Nom</span><span class="sig-val">${nom}</span></div>
-    <div class="sig-line"><span class="sig-key">Date</span><span class="sig-val">${date}</span></div>
-    <div class="sig-line" style="align-items:flex-start"><span class="sig-key">Signature</span><img src="${sigData}" style="height:60px;border:0.5px solid #e0ddd6;border-radius:4px"></div>
-  </div>
-  <script>window.onload=function(){window.print();}<\/script>
-  </body></html>`;
+  doc.setFontSize(9);
+  let wrappedComment=[];
+  if(hasEcart && ecartComment){
+    wrappedComment = doc.splitTextToSize('Commentaire écart : '+ecartComment, pageWidth-44);
+  }
+  const boxH = 26 + (wrappedComment.length? (6+wrappedComment.length*4) : 0);
 
-  const w=window.open('','_blank','width=800,height=700');
-  w.document.write(pdfHtml);
-  w.document.close();
+  doc.setDrawColor(...BORDER);
+  doc.setFillColor(...LIGHT);
+  doc.roundedRect(14, y, pageWidth-28, boxH, 2, 2, 'FD');
+
+  let ty=y+8;
+  doc.setFontSize(10);
+  doc.setTextColor(...GRAY);
+  doc.text('Total compté', 20, ty);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(...DARK);
+  doc.text(compte, pageWidth-20, ty, {align:'right'});
+  doc.setFont('helvetica','normal');
+  ty+=7;
+  doc.setTextColor(...GRAY);
+  doc.text('Solde Optimum', 20, ty);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(...DARK);
+  doc.text(optimum?optimum+' €':'—', pageWidth-20, ty, {align:'right'});
+  doc.setFont('helvetica','normal');
+  ty+=7;
+  doc.setTextColor(...GRAY);
+  doc.text('Écart', 20, ty);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(...(hasEcart?RED:GREEN));
+  doc.text(ecart, pageWidth-20, ty, {align:'right'});
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(...DARK);
+
+  if(wrappedComment.length){
+    ty+=8;
+    doc.setFontSize(9);
+    doc.setTextColor(...RED);
+    doc.text(wrappedComment, 20, ty);
+  }
+
+  y = y+boxH+12;
+
+  sectionLabel('Signature du directeur / directrice', y); y+=6;
+  doc.setDrawColor(...BORDER);
+  doc.setFillColor(255,255,255);
+  doc.roundedRect(14, y, pageWidth-28, 40, 2, 2, 'S');
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text('Nom', 20, y+11);
+  doc.text('Date', 20, y+19);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(...DARK);
+  doc.text(nom||'—', 40, y+11);
+  doc.setFont('helvetica','normal');
+  doc.text(date, 40, y+19);
+  try{ doc.addImage(sigData,'PNG', pageWidth-72, y+5, 56, 30); }catch(e){}
+
+  doc.setFontSize(8);
+  doc.setTextColor(...GRAY);
+  doc.text('Document généré automatiquement le '+new Date().toLocaleString('fr-FR'), 14, 290);
+
+  const pdfBase64 = doc.output('datauristring').split(',')[1];
+  const magasinSafe = (magasin||'magasin').replace(/[^a-zA-Z0-9-_]/g,'_');
+  const filename = 'Cloture_caisse_'+magasinSafe+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+  return {pdfBase64, filename};
 }
 
 function buildPayload(){
@@ -356,6 +445,7 @@ function buildPayload(){
   PC.forEach(p=>{pieces[p.v]=parseInt(document.getElementById(p.id).value)||0;});
   const optRaw=document.getElementById('tot-optimum').value.replace(',','.');
   const compteRaw=document.getElementById('tot-compte').textContent.replace(/[^\d,.-]/g,'').replace(',','.');
+  const {pdfBase64,filename}=buildPdf();
   return {
     magasin:getNomMagasin(),
     date_cloture:new Date().toISOString().slice(0,10),
@@ -367,7 +457,9 @@ function buildPayload(){
     solde_optimum:parseFloat(optRaw)||null,
     ecart:document.getElementById('tot-ecart').textContent,
     commentaire_ecart:document.getElementById('ecart-comment')?document.getElementById('ecart-comment').value:'',
-    signature_png_base64:document.getElementById('sig-canvas').toDataURL('image/png')
+    signature_png_base64:document.getElementById('sig-canvas').toDataURL('image/png'),
+    pdf_base64:pdfBase64,
+    pdf_filename:filename
   };
 }
 
@@ -386,12 +478,20 @@ function validateCaisse(){
   document.getElementById('conf-ok').style.display='none';
   document.getElementById('conf-err').style.display='none';
 
-  generatePDF();
-
-  const payload=buildPayload();
-
   if(!WEBHOOK_URL || WEBHOOK_URL.startsWith('REMPLACER')){
-    showConf(true,'PDF généré. (Webhook n8n non configuré pour le moment — voir commentaire en haut du script.)');
+    showConf(false,"Le webhook n8n n'est pas configuré.");
+    return;
+  }
+
+  const btn=document.getElementById('btn-valider');
+  btn.disabled=true;
+
+  let payload;
+  try{
+    payload=buildPayload();
+  }catch(e){
+    btn.disabled=false;
+    showConf(false,"Erreur lors de la génération du PDF. Réessayez.");
     return;
   }
 
@@ -400,10 +500,12 @@ function validateCaisse(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)
   }).then(r=>{
-    if(r.ok){showConf(true,'Données envoyées à la comptabilité avec succès.');}
-    else{showConf(false,'Le webhook a répondu avec une erreur (code '+r.status+').');}
+    btn.disabled=false;
+    if(r.ok){showConf(true,'La caisse a bien été envoyée.');}
+    else{showConf(false,'Erreur lors de l\'envoi (code '+r.status+'). Réessayez.');}
   }).catch(()=>{
-    showConf(false,"Impossible de contacter le webhook n8n. Vérifiez la connexion ou l'URL configurée.");
+    btn.disabled=false;
+    showConf(false,"Impossible de contacter le serveur. Vérifiez votre connexion et réessayez.");
   });
 }
 
