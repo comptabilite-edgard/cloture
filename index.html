@@ -11,7 +11,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#F5F4EF;color:#1a1a18;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:1rem}
+.wrap{max-width:960px;margin:0 auto;padding:1rem;padding-bottom:80px}
 .screen{display:none}
 .screen.active{display:block}
 .gold{color:#B8982A}
@@ -100,6 +100,7 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
   </div>
 </div>
 
+<div style="position:relative;overflow:hidden">
 <!-- ACCUEIL -->
 <div id="s-home" class="screen active">
   <!-- Sélection magasin -->
@@ -149,7 +150,7 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 </div>
 
 <!-- ÉTAPE 1 : Préparation de l'inventaire -->
-<div id="s-stock" class="screen">
+<div id="s-stock" class="screen" style="display:none">
   <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
     <div class="section-title" style="margin:0">Préparation de l'inventaire</div>
@@ -193,15 +194,10 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
       <button class="btn-outline" onclick="printRoles()" style="font-size:12px;color:#2D4A8A;border-color:#2D4A8A"><i class="ti ti-printer" style="font-size:13px"></i> Imprimer / Exporter PDF</button>
     </div>
   </div>
-
-  <button class="btn-primary" id="btn-stock" onclick="validateStep('stock')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-stock"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
 </div>
 
 <!-- ÉTAPE 2 : Rétrocessions & dépôt-vente -->
-<div id="s-retro" class="screen">
+<div id="s-retro" class="screen" style="display:none">
   <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
     <div class="section-title" style="margin:0">Rétrocessions & dépôt-vente</div>
@@ -230,15 +226,10 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
     <div class="info"><i class="ti ti-info-circle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><div>Si vous avez le moindre doute, contactez avant le 23 septembre :<br><strong>Deborah</strong> — <a href="tel:0285292550" style="color:#2D4A8A">02.85.29.25.50</a> &nbsp;|&nbsp; <strong>Baptiste</strong> — <a href="tel:0638634623" style="color:#2D4A8A">06.38.63.46.23</a></div></div>
     <div id="checklist-depot"></div>
   </div>
-
-  <button class="btn-primary" id="btn-retro" onclick="validateStep('retro')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-retro"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
 </div>
 
 <!-- ÉTAPE 3 : Bordereaux de livraison -->
-<div id="s-bl" class="screen">
+<div id="s-bl" class="screen" style="display:none">
   <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
     <div class="section-title" style="margin:0">Bordereaux de livraison Optimum</div>
@@ -316,14 +307,9 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
     <div id="checklist-bl"></div>
   </div>
 
-  <button class="btn-primary" id="btn-bl" onclick="validateStep('bl')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-bl"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
-</div>
 
 <!-- ÉTAPE 4 : Goodies -->
-<div id="s-goodies" class="screen">
+<div id="s-goodies" class="screen" style="display:none">
   <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
     <div class="section-title" style="margin:0">Inventaire des goodies</div>
@@ -344,41 +330,53 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
     </div>
     <div id="checklist-goodies"></div>
   </div>
-
-  <button class="btn-primary" id="btn-goodies" onclick="validateStep('goodies')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-goodies"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
 </div>
 
 
 <!-- ÉTAPE 5 : Procédure du 30/09 -->
-<div id="s-procedure" class="screen">
+<div id="s-procedure" class="screen" style="display:none">
   <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-    <div class="section-title" style="margin:0">Procédure du 30 septembre</div>
+    <div class="section-title" style="margin:0">Procédure du 30 septembre et du 1er octobre</div>
     <span style="font-size:12px;color:#888780" id="proc-mag-name"></span>
   </div>
 
-  <div class="tip"><i class="ti ti-bulb" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>Prenez connaissance des tâches à effectuer le 30 septembre afin de préparer votre équipe et d'anticiper les difficultés.</div>
-
   <div class="card">
-    <div class="card-title"><i class="ti ti-list-check" style="font-size:15px"></i>Les 3 étapes du 30 septembre au soir</div>
+    <div class="card-title"><i class="ti ti-list-check" style="font-size:15px"></i>Les 4 étapes du 30 septembre au soir</div>
 
     <div class="summary-section" style="margin-bottom:1.25rem">
-      <h4><i class="ti ti-cash" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 1 — Inventaire de caisse</h4>
-      <p>Comptage de la caisse physique à rapprocher de solde théorique Optimum</p>
+      <h4><i class="ti ti-package" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 1 — Pointage et archivage des BL Optimum</h4>
+      <p>Rapprochement des BL Optimum avec les factures Yooz</p>
     </div>
 
     <div class="summary-section" style="margin-bottom:1.25rem">
-      <h4><i class="ti ti-receipt" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 2 — Chèques différés</h4>
+      <h4><i class="ti ti-cash" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 2 — Inventaire de caisse</h4>
+      <p>Comptage de la caisse physique à rapprocher du solde théorique Optimum</p>
+    </div>
+
+    <div class="summary-section" style="margin-bottom:1.25rem">
+      <h4><i class="ti ti-receipt" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 3 — Chèques différés</h4>
       <p>Rapprochement des chèques présents en magasin avec la liste des chèques différés extraite d'Optimum</p>
     </div>
 
     <div class="summary-section">
-      <h4><i class="ti ti-package" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 3 — Inventaire du stock</h4>
+      <h4><i class="ti ti-barcode" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 4 — Inventaire du stock</h4>
       <p>Comptage complet de votre stock et rapprochement avec Optimum</p>
       <a href="#" target="_blank" style="font-size:12px;color:#888780;display:inline-flex;align-items:center;gap:4px;margin-top:6px"><i class="ti ti-external-link" style="font-size:13px"></i> Procédure inventaire détaillée (lien à venir)</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-calendar-event" style="font-size:15px;color:#B8982A"></i>Les 2 étapes du 1er octobre</div>
+
+    <div class="summary-section" style="margin-bottom:1.25rem">
+      <h4><i class="ti ti-table" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 1 — Tableau des commandés non facturés</h4>
+      <p>Remplir le tableau des commandés non facturés — tableau fourni le 1er octobre au matin</p>
+    </div>
+
+    <div class="summary-section">
+      <h4><i class="ti ti-credit-card" style="font-size:13px;margin-right:4px;color:#B8982A"></i>Étape 2 — Pointage Tiers Payant</h4>
+      <p>Pointage Tiers Payant jusqu'au 30/09/2026</p>
     </div>
   </div>
 
@@ -390,15 +388,9 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
       <label for="check-proc">J'ai pris connaissance des étapes de l'inventaire</label>
     </div>
   </div>
-
-  <button class="btn-primary" id="btn-procedure" onclick="validateStep('procedure')" disabled>
-    <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
-  </button>
-  <div class="confirm-box" id="conf-procedure"><i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span></div>
 </div>
 
-<!-- FÉLICITATIONS -->
-<div id="s-finish" class="screen">
+<div id="s-finish" class="screen" style="display:none">
   <div style="padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden">
     <canvas id="fw-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></canvas>
     <div style="position:relative;z-index:2">
@@ -421,7 +413,21 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
   </div>
 </div>
 
-</div><!-- /wrap -->
+
+</div></div><!-- /wrap -->
+<!-- BOUTON GLOBAL UNIQUE -->
+<div id="global-btn-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;background:white;padding:12px 1rem;box-shadow:0 -2px 8px rgba(0,0,0,0.08);z-index:200">
+  <div style="max-width:960px;margin:0 auto;display:flex;gap:8px">
+    <button class="btn-primary" id="global-btn-validate" onclick="globalValidate()" disabled style="flex:1;margin-bottom:0">
+      <i class="ti ti-check" style="font-size:16px"></i> Marquer l'étape comme terminée
+    </button>
+  </div>
+</div>
+<div id="global-confirm-box" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#EAF3DE;padding:12px 1rem;z-index:200">
+  <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;gap:10px;color:#3B6D11;font-size:13px">
+    <i class="ti ti-circle-check" style="font-size:18px"></i><span>Étape validée — retour à l'accueil…</span>
+  </div>
+</div>
 
 <script>
 const STEPS = [
@@ -429,11 +435,12 @@ const STEPS = [
   {id:'retro', screen:'s-retro', icon:'ti-arrows-exchange', name:'Rétrocessions & dépôt-vente', sub:'Vérifications avant le 23 septembre'},
   {id:'bl', screen:'s-bl', icon:'ti-truck', name:'Bordereaux de livraison', sub:'BL Fournisseurs & Retours à rapprocher sur Yooz'},
   {id:'goodies', screen:'s-goodies', icon:'ti-gift', name:'Inventaire des goodies', sub:'Comptage unitaire & saisie sur SharePoint'},
-  {id:'procedure', screen:'s-procedure', icon:'ti-list-check', name:'Procédure du 30 septembre', sub:'Lecture et confirmation avant le jour J'},
+  {id:'procedure', screen:'s-procedure', icon:'ti-list-check', name:'Procédure du 30 sept. et 1er oct.', sub:'Lecture et confirmation avant le jour J'},
 ];
 
 let done = {};
 let procChecked = false;
+let currentStep = null;
 let rolesData = [];
 // Checklists data
 const CHECKLIST_STOCK = [
@@ -523,21 +530,42 @@ function renderHome(){
 
 function openStep(screen){
   show(screen);
+  const stepMap={'s-stock':'stock','s-retro':'retro','s-bl':'bl','s-goodies':'goodies','s-procedure':'procedure'};
+  currentStep=stepMap[screen]||null;
+  const btnBar=document.getElementById('global-btn-bar');
+  if(btnBar)btnBar.style.display=currentStep?'block':'none';
   if(screen==='s-stock')restoreStock();
   if(screen==='s-retro')restoreRetro();
   if(screen==='s-bl')restoreBl();
   if(screen==='s-goodies')restoreGoodies();
   if(screen==='s-procedure')restoreProc();
+  checkStepReady();
 }
-function goHome(){const n=Object.keys(done).filter(k=>done[k]).length;if(n===STEPS.length&&!sessionStorage.getItem('23_finished')){sessionStorage.setItem('23_finished','1');show('s-finish');startFireworks();}else{show('s-home');renderHome();}}
+function goHome(){const n=Object.keys(done).filter(k=>done[k]).length;currentStep=null;const btnBar=document.getElementById('global-btn-bar');if(btnBar)btnBar.style.display='none';if(n===STEPS.length&&!sessionStorage.getItem('23_finished')){sessionStorage.setItem('23_finished','1');show('s-finish');startFireworks();}else{show('s-home');renderHome();}}
 function goHomeNoFinish(){show('s-home');renderHome();}
 function undoStep(id,screen){done[id]=false;saveState();openStep(screen);}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'instant'});document.getElementById(id).scrollIntoView({block:'start'});}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.style.display='block';
+  document.documentElement.scrollTop=0;
+  document.body.scrollTop=0;
+  window.scrollTo(0,0);
+  // DEBUG
+  setTimeout(()=>{
+    ['s-stock','s-retro','s-bl','s-goodies','s-procedure'].forEach(sid=>{
+      const el2=document.getElementById(sid);
+      if(el2){const cs=window.getComputedStyle(el2);console.log(sid,'display='+cs.display,'inline='+el2.style.display,'class='+el2.className);}
+    });
+  },100);
+}
 
 function validateStep(id){
   done[id]=true;saveState();
-  const box=document.getElementById('conf-'+id);
-  box.style.display='flex';
   // Envoyer la validation à n8n
   const magasin=getNomMagasin();
   const etapeMap={stock:'etape1_stock',retro:'etape2_retrocessions',bl:'etape3_bl',goodies:'etape4_goodies',proc:'etape5_procedure'};
@@ -547,9 +575,14 @@ function validateStep(id){
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({magasin:magasin,etape:etape,timestamp:new Date().toISOString()})
-    }).catch(function(){});// silencieux si hors ligne
+    }).catch(function(){});
   }
-  setTimeout(()=>{box.style.display='none';goHome();},1500);
+  // Afficher confirmation globale
+  const btnBar=document.getElementById('global-btn-bar');
+  const confirmBox=document.getElementById('global-confirm-box');
+  if(btnBar)btnBar.style.display='none';
+  if(confirmBox)confirmBox.style.display='block';
+  setTimeout(()=>{if(confirmBox)confirmBox.style.display='none';goHome();},1500);
 }
 
 // Checklists génériques
@@ -588,27 +621,17 @@ function toggleCheck(prefix,i,containerId){
   checkStepReady();
 }
 function checkStepReady(){
-  // stock
-  const stockOk=CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]);
-  const btn_stock=document.getElementById('btn-stock');
-  if(btn_stock)btn_stock.disabled=!stockOk;
-  // retro
-  const retroOk=[...Array(CHECKLIST_RETRO.length).keys()].every(i=>checkStates['retro_'+i])
+  const btn=document.getElementById('global-btn-validate');
+  if(!btn)return;
+  let ok=false;
+  if(currentStep==='stock') ok=CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]);
+  else if(currentStep==='retro') ok=[...Array(CHECKLIST_RETRO.length).keys()].every(i=>checkStates['retro_'+i])
     && [...Array(CHECKLIST_PRETS.length).keys()].every(i=>checkStates['prets_'+i])
     && [...Array(CHECKLIST_DEPOT.length).keys()].every(i=>checkStates['depot_'+i]);
-  const btn_retro=document.getElementById('btn-retro');
-  if(btn_retro)btn_retro.disabled=!retroOk;
-  // bl
-  const blOk=CHECKLIST_BL.every((_,i)=>checkStates['bl_'+i]);
-  const btn_bl=document.getElementById('btn-bl');
-  if(btn_bl)btn_bl.disabled=!blOk;
-  // goodies
-  const goodiesOk=CHECKLIST_GOODIES.every((_,i)=>checkStates['goodies_'+i]);
-  const btn_goodies=document.getElementById('btn-goodies');
-  if(btn_goodies)btn_goodies.disabled=!goodiesOk;
-  // procedure
-  const btn_proc=document.getElementById('btn-procedure');
-  if(btn_proc)btn_proc.disabled=!procChecked;
+  else if(currentStep==='bl') ok=CHECKLIST_BL.every((_,i)=>checkStates['bl_'+i]);
+  else if(currentStep==='goodies') ok=CHECKLIST_GOODIES.every((_,i)=>checkStates['goodies_'+i]);
+  else if(currentStep==='procedure') ok=procChecked;
+  btn.disabled=!ok;
 }
 
 function restoreStock(){
@@ -797,76 +820,15 @@ function printRoles(){
     <tbody>${rows}</tbody>
   </table>
   <div class="footer">Edgard Opticiens — Clôture annuelle 30 septembre 2026</div>
-  <script>window.onload=function(){window.print()}<\/script>
+  <scr'+'ipt>window.onload=function(){window.print()}<\/scr'+'ipt>
   </body></html>`);
   win.document.close();
 }
 
 
-// =================== SIGNATURE CANVAS ===================
-function initSigCanvas(){
-  const canvas=document.getElementById('sig-canvas');
-  if(!canvas||canvas.dataset.init)return;
-  canvas.dataset.init='1';
-  const ctx=canvas.getContext('2d');
-  ctx.strokeStyle='#1a1a18';
-  ctx.lineWidth=2;
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-  let drawing=false;
-  let lastX=0,lastY=0;
-
-  function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/r.width;
-    const scaleY=canvas.height/r.height;
-    if(e.touches){
-      return {x:(e.touches[0].clientX-r.left)*scaleX, y:(e.touches[0].clientY-r.top)*scaleY};
-    }
-    return {x:(e.clientX-r.left)*scaleX, y:(e.clientY-r.top)*scaleY};
-  }
-
-  function startDraw(e){
-    e.preventDefault();
-    drawing=true;
-    const pos=getPos(e);
-    lastX=pos.x;lastY=pos.y;
-    ctx.beginPath();ctx.moveTo(lastX,lastY);
-  }
-  function draw(e){
-    e.preventDefault();
-    if(!drawing)return;
-    const pos=getPos(e);
-    ctx.lineTo(pos.x,pos.y);
-    ctx.stroke();
-    lastX=pos.x;lastY=pos.y;
-    // Marquer comme signé
-    canvas.dataset.signed='1';
-    const ph=document.getElementById('sig-placeholder');
-    if(ph)ph.style.display='none';
-  }
-  function endDraw(e){drawing=false;}
-
-  canvas.addEventListener('mousedown',startDraw);
-  canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('mouseup',endDraw);
-  canvas.addEventListener('mouseleave',endDraw);
-  canvas.addEventListener('touchstart',startDraw,{passive:false});
-  canvas.addEventListener('touchmove',draw,{passive:false});
-  canvas.addEventListener('touchend',endDraw);
+function globalValidate(){
+  if(currentStep)validateStep(currentStep);
 }
-
-function clearSig(){
-  const canvas=document.getElementById('sig-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  delete canvas.dataset.signed;
-  const ph=document.getElementById('sig-placeholder');
-  if(ph)ph.style.display='';
-}
-
-
 
 loadState();
 </script>
