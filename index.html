@@ -193,6 +193,7 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
       <button class="btn-outline" onclick="addBinome()" style="font-size:12px"><i class="ti ti-plus" style="font-size:13px"></i> Ajouter un binôme</button>
       <button class="btn-outline" onclick="printRoles()" style="font-size:12px;color:#2D4A8A;border-color:#2D4A8A"><i class="ti ti-printer" style="font-size:13px"></i> Imprimer / Exporter PDF</button>
     </div>
+    <div class="tip" id="export-required-tip" style="margin-top:10px;display:none"><i class="ti ti-alert-triangle" style="font-size:14px;flex-shrink:0;margin-top:1px"></i>L'export PDF de la liste des collaborateurs est requis avant de pouvoir valider cette étape.</div>
   </div>
 </div>
 
@@ -239,7 +240,7 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
   <div class="card">
     <div class="card-title"><i class="ti ti-info-circle" style="font-size:15px"></i>Objectif</div>
     <div class="proc-text">Le <strong>30 septembre au soir</strong>, l'ensemble des bordereaux <strong>« Fournisseurs »</strong> et <strong>« Retour fournisseurs »</strong> sur Optimum doit être rapproché d'une facture ou d'un avoir sur <strong>Yooz</strong>.</div>
-    <div class="proc-text">Un bordereau non archivé = du stock non rapproché d'une facture. Anticipez dès le 23 septembre pour éviter les urgences le 30 au soir.</div>
+    <div class="proc-text">Un bordereau non archivé = du stock non rapproché d'une facture. Anticipez dès maintenant pour éviter les urgences le 30 au soir.</div>
   </div>
 
   <!-- BL Fournisseurs -->
@@ -440,6 +441,7 @@ const STEPS = [
 
 let done = {};
 let procChecked = false;
+let pdfExported = false;
 let currentStep = null;
 let rolesData = [];
 // Checklists data
@@ -474,11 +476,11 @@ const CHECKLIST_GOODIES = [
 let checkStates = {};
 
 function loadState(){
-  try{const s=localStorage.getItem('edgard_23sept_v1');if(s){const d=JSON.parse(s);done=d.done||{};checkStates=d.checkStates||{};rolesData=d.rolesData||[];procChecked=d.procChecked||false;}}catch(e){}
+  try{const s=localStorage.getItem('edgard_23sept_v1');if(s){const d=JSON.parse(s);done=d.done||{};checkStates=d.checkStates||{};rolesData=d.rolesData||[];procChecked=d.procChecked||false;pdfExported=d.pdfExported||false;}}catch(e){}
   renderHome();
 }
 function saveState(){
-  try{localStorage.setItem('edgard_23sept_v1',JSON.stringify({done,checkStates,rolesData,procChecked}));}catch(e){}
+  try{localStorage.setItem('edgard_23sept_v1',JSON.stringify({done,checkStates,rolesData,procChecked,pdfExported}));}catch(e){}
 }
 function getNomMagasin(){return localStorage.getItem('edgard_23sept_nom')||'';}
 function saveNomMagasin(){
@@ -610,6 +612,15 @@ function renderChecklist(containerId, items, prefix){
     c.appendChild(div);
   });
 }
+function toggleCheckProc(){
+  procChecked=!procChecked;
+  saveState();
+  const row=document.getElementById('check-proc-row');
+  const cb=document.getElementById('check-proc');
+  if(row)row.classList.toggle('checked',procChecked);
+  if(cb)cb.checked=procChecked;
+  checkStepReady();
+}
 function toggleCheck(prefix,i,containerId){
   const key=prefix+'_'+i;
   checkStates[key]=!checkStates[key];
@@ -624,7 +635,11 @@ function checkStepReady(){
   const btn=document.getElementById('global-btn-validate');
   if(!btn)return;
   let ok=false;
-  if(currentStep==='stock') ok=CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]);
+  if(currentStep==='stock'){
+    ok=CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]) && pdfExported;
+    const tip=document.getElementById('export-required-tip');
+    if(tip)tip.style.display=(CHECKLIST_STOCK.every((_,i)=>checkStates['stock_'+i]) && !pdfExported)?'flex':'none';
+  }
   else if(currentStep==='retro') ok=[...Array(CHECKLIST_RETRO.length).keys()].every(i=>checkStates['retro_'+i])
     && [...Array(CHECKLIST_PRETS.length).keys()].every(i=>checkStates['prets_'+i])
     && [...Array(CHECKLIST_DEPOT.length).keys()].every(i=>checkStates['depot_'+i]);
@@ -784,6 +799,9 @@ function removeBinome(i){
   saveState();renderRolesTable();
 }
 function printRoles(){
+  pdfExported=true;
+  saveState();
+  checkStepReady();
   const mag=getNomMagasin()||'Magasin';
   let rows=rolesData.map((r,i)=>{
     const binomeNum=Math.floor(i/2)+1;
