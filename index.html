@@ -400,6 +400,23 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
   </div>
 </div>
 
+<!-- ÉTAPE 6 : Relances clients -->
+<div id="s-relances" class="screen" style="display:none">
+  <button class="btn-back" onclick="goHome()"><i class="ti ti-arrow-left"></i> Retour</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+    <div class="section-title" style="margin:0">Relances clients</div>
+    <span style="font-size:12px;color:#888780" id="relances-mag-name"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-phone-call" style="font-size:15px"></i>Point à faire avant la clôture</div>
+    <div class="proc-step">
+      <div class="proc-text">Avant le 30 septembre, il est important de faire le tour de vos dossiers clients en-cours, cela facilitera le traitement des commandés non facturés le 1er octobre :</div>
+    </div>
+    <div id="checklist-relances" style="margin-top:12px"></div>
+  </div>
+</div>
+
 <div id="s-finish" class="screen" style="display:none">
   <div style="padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden">
     <canvas id="fw-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></canvas>
@@ -444,6 +461,7 @@ const STEPS = [
   {id:'bl', screen:'s-bl', icon:'ti-truck', name:'Bordereaux de livraison', sub:'BL Fournisseurs & Retours à rapprocher sur Yooz'},
   {id:'goodies', screen:'s-goodies', icon:'ti-gift', name:'Inventaire des goodies', sub:'Comptage unitaire & saisie sur SharePoint'},
   {id:'procedure', screen:'s-procedure', icon:'ti-list-check', name:'Procédure du 30 sept. et 1er oct.', sub:'Lecture et confirmation avant le jour J'},
+  {id:'relances', screen:'s-relances', icon:'ti-phone-call', name:'Relances clients', sub:'Impayés, dossiers non livrés & facturation'},
 ];
 
 let done = {};
@@ -480,6 +498,12 @@ const CHECKLIST_GOODIES = [
   'Le fichier inventaire goodies a été complété sur SharePoint',
 ];
 
+const CHECKLIST_RELANCES = [
+  'J\'ai relancé les impayés',
+  'J\'ai relancé les dossiers non livrés de plus de 1 mois',
+  'J\'ai fait le point sur les décalages de facturation client (mutuelle)',
+];
+
 let checkStates = {};
 
 function loadState(){
@@ -496,7 +520,7 @@ function saveNomMagasin(){
   propagateNom(v);renderHome();
 }
 function propagateNom(n){
-  ['stock','retro','bl','goodies','proc'].forEach(id=>{
+  ['stock','retro','bl','goodies','proc','relances'].forEach(id=>{
     const el=document.getElementById(id+'-mag-name');
     if(el)el.textContent=n;
   });
@@ -539,7 +563,7 @@ function renderHome(){
 
 function openStep(screen){
   show(screen);
-  const stepMap={'s-stock':'stock','s-retro':'retro','s-bl':'bl','s-goodies':'goodies','s-procedure':'procedure'};
+  const stepMap={'s-stock':'stock','s-retro':'retro','s-bl':'bl','s-goodies':'goodies','s-procedure':'procedure','s-relances':'relances'};
   currentStep=stepMap[screen]||null;
   const btnBar=document.getElementById('global-btn-bar');
   if(btnBar)btnBar.style.display=currentStep?'block':'none';
@@ -548,6 +572,7 @@ function openStep(screen){
   if(screen==='s-bl')restoreBl();
   if(screen==='s-goodies')restoreGoodies();
   if(screen==='s-procedure')restoreProc();
+  if(screen==='s-relances')restoreRelances();
   checkStepReady();
 }
 function goHome(){const n=Object.keys(done).filter(k=>done[k]).length;currentStep=null;const btnBar=document.getElementById('global-btn-bar');if(btnBar)btnBar.style.display='none';if(n===STEPS.length&&!sessionStorage.getItem('23_finished')){sessionStorage.setItem('23_finished','1');show('s-finish');startFireworks();}else{show('s-home');renderHome();}}
@@ -566,7 +591,7 @@ function show(id){
   window.scrollTo(0,0);
   // DEBUG
   setTimeout(()=>{
-    ['s-stock','s-retro','s-bl','s-goodies','s-procedure'].forEach(sid=>{
+    ['s-stock','s-retro','s-bl','s-goodies','s-procedure','s-relances'].forEach(sid=>{
       const el2=document.getElementById(sid);
       if(el2){const cs=window.getComputedStyle(el2);console.log(sid,'display='+cs.display,'inline='+el2.style.display,'class='+el2.className);}
     });
@@ -577,7 +602,7 @@ function validateStep(id){
   done[id]=true;saveState();
   // Envoyer la validation à n8n
   const magasin=getNomMagasin();
-  const etapeMap={stock:'etape1_stock',retro:'etape2_retrocessions',bl:'etape3_bl',goodies:'etape4_goodies',proc:'etape5_procedure'};
+  const etapeMap={stock:'etape1_stock',retro:'etape2_retrocessions',bl:'etape3_bl',goodies:'etape4_goodies',procedure:'etape5_procedure',relances:'etape6_relances'};
   const etape=etapeMap[id];
   if(magasin&&etape){
     fetch('https://edgard-opticiens.app.n8n.cloud/webhook/inventaire-23sept-etape',{
@@ -653,6 +678,7 @@ function checkStepReady(){
   else if(currentStep==='bl') ok=CHECKLIST_BL.every((_,i)=>checkStates['bl_'+i]);
   else if(currentStep==='goodies') ok=CHECKLIST_GOODIES.every((_,i)=>checkStates['goodies_'+i]);
   else if(currentStep==='procedure') ok=procChecked;
+  else if(currentStep==='relances') ok=CHECKLIST_RELANCES.every((_,i)=>checkStates['relances_'+i]);
   btn.disabled=!ok;
 }
 
@@ -673,6 +699,10 @@ function restoreBl(){
 }
 function restoreGoodies(){
   renderChecklist('checklist-goodies',CHECKLIST_GOODIES,'goodies');
+  checkStepReady();
+}
+function restoreRelances(){
+  renderChecklist('checklist-relances',CHECKLIST_RELANCES,'relances');
   checkStepReady();
 }
 // =================== SIGNATURE CANVAS ===================
