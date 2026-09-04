@@ -89,7 +89,8 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 @media print{
   body *{visibility:hidden}
   #s-procedure, #s-procedure *{visibility:visible}
-  #s-procedure{position:absolute;left:0;top:0;width:100%;display:block !important}
+  #screens-container{overflow:visible !important;height:auto !important}
+  #s-procedure{display:block !important;position:static !important}
   .no-print,.btn-back{display:none !important}
 }
 </style>
@@ -106,7 +107,7 @@ canvas#fw-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
   </div>
 </div>
 
-<div style="position:relative;overflow:hidden">
+<div id="screens-container" style="position:relative;overflow:hidden">
 <!-- ACCUEIL -->
 <div id="s-home" class="screen active">
   <!-- Sélection magasin -->
@@ -589,13 +590,6 @@ function show(id){
   document.documentElement.scrollTop=0;
   document.body.scrollTop=0;
   window.scrollTo(0,0);
-  // DEBUG
-  setTimeout(()=>{
-    ['s-stock','s-retro','s-bl','s-goodies','s-procedure','s-relances'].forEach(sid=>{
-      const el2=document.getElementById(sid);
-      if(el2){const cs=window.getComputedStyle(el2);console.log(sid,'display='+cs.display,'inline='+el2.style.display,'class='+el2.className);}
-    });
-  },100);
 }
 
 function validateStep(id){
